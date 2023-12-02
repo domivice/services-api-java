@@ -13,22 +13,19 @@ paths:
       tags:
         - Service Categories
       parameters:
-        -
-          name: search
+        - name: search
           description: The search terms
           schema:
             type: string
           in: query
           required: false
-        -
-          name: parentId
+        - name: parentId
           description: The service category parent id
           schema:
             format: uuid
             type: string
           in: query
-        -
-          name: slug
+        - name: slug
           description: The service category slug
           schema:
             type: string
@@ -82,8 +79,7 @@ paths:
       tags:
         - Service Categories
       parameters:
-        -
-          name: serviceCategoryId
+        - name: serviceCategoryId
           description: The service category Id
           schema:
             format: uuid
@@ -126,8 +122,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Service Category
     parameters:
-      -
-        name: serviceCategoryId
+      - name: serviceCategoryId
         description: The service category Id
         schema:
           format: uuid
@@ -139,15 +134,13 @@ paths:
       tags:
         - Service Categories
       parameters:
-        -
-          name: countryCode
+        - name: countryCode
           description: Filter licence requirement by country code
           schema:
             type: string
           in: query
           required: false
-        -
-          name: stateCode
+        - name: stateCode
           description: Filter licence requirements by state code
           schema:
             type: string
@@ -190,8 +183,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Add Licence Requirement
     parameters:
-      -
-        name: serviceCategoryId
+      - name: serviceCategoryId
         description: The service category id
         schema:
           format: uuid
@@ -255,16 +247,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Licence Requirement
     parameters:
-      -
-        name: serviceCategoryId
+      - name: serviceCategoryId
         description: The service category id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: licenceRequirementId
+      - name: licenceRequirementId
         description: The licence requirement id
         schema:
           format: uuid
@@ -276,35 +266,30 @@ paths:
       tags:
         - Services
       parameters:
-        -
-          name: serviceCategoryId
+        - name: serviceCategoryId
           description: The service category id
           schema:
             format: uuid
             type: string
           in: query
-        -
-          name: search
+        - name: search
           description: The services search terms
           schema:
             type: string
           in: query
-        -
-          name: serviceProviderId
+        - name: serviceProviderId
           description: The service Provider id
           schema:
             format: uuid
             type: string
           in: query
           required: false
-        -
-          name: geohash
+        - name: geohash
           description: The geohash to use in the service search
           schema:
             type: string
           in: query
-        -
-          name: slug
+        - name: slug
           description: The service slug
           schema:
             type: string
@@ -393,8 +378,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Service
     parameters:
-      -
-        name: serviceId
+      - name: serviceId
         schema:
           format: uuid
           type: string
@@ -427,8 +411,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Add Service Offering
     parameters:
-      -
-        name: serviceId
+      - name: serviceId
         description: The service id
         schema:
           format: uuid
@@ -473,16 +456,14 @@ paths:
           $ref: '#/components/responses/Forbidden'
       summary: Update Service Offering
     parameters:
-      -
-        name: serviceId
+      - name: serviceId
         description: The service id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: serviceOfferingId
+      - name: serviceOfferingId
         description: The service offering id
         schema:
           format: uuid
@@ -504,8 +485,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: List Service Provider Reviews
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         schema:
           format: uuid
           type: string
@@ -516,8 +496,7 @@ paths:
       tags:
         - Licences
       parameters:
-        -
-          name: search
+        - name: search
           description: The licence type search term
           schema:
             type: string
@@ -614,8 +593,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Licence Type
     parameters:
-      -
-        name: licenceTypeId
+      - name: licenceTypeId
         description: Licence Type id
         schema:
           format: uuid
@@ -627,26 +605,22 @@ paths:
       tags:
         - Licences
       parameters:
-        -
-          name: search
+        - name: search
           description: The search term
           schema:
             type: string
           in: query
-        -
-          name: countryCode
+        - name: countryCode
           description: Filter licence issuer by country code
           schema:
             type: string
           in: query
-        -
-          name: stateCode
+        - name: stateCode
           description: Filter licence issuers by state code
           schema:
             type: string
           in: query
-        -
-          name: licenceTypeId
+        - name: licenceTypeId
           description: Filter licence type by licence type
           schema:
             type: string
@@ -743,8 +717,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Licence Issuer
     parameters:
-      -
-        name: licenceIssuerId
+      - name: licenceIssuerId
         description: Licence issuer id
         schema:
           format: uuid
@@ -795,8 +768,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Add Service Provider Licence
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
@@ -860,16 +832,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Service Provider Licence
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: licenceId
+      - name: licenceId
         description: The licence id
         schema:
           format: uuid
@@ -905,8 +875,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
       summary: Upload Service Category Avatar
     parameters:
-      -
-        name: serviceCategoryId
+      - name: serviceCategoryId
         schema:
           format: uuid
           type: string
@@ -947,8 +916,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Upload Service Image Gallery
     parameters:
-      -
-        name: serviceId
+      - name: serviceId
         description: The service id
         schema:
           format: uuid
@@ -970,16 +938,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Delete Gallery Image
     parameters:
-      -
-        name: serviceId
+      - name: serviceId
         description: The service id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: imageId
+      - name: imageId
         description: The image id
         schema:
           type: string
@@ -990,45 +956,38 @@ paths:
       tags:
         - Service Providers
       parameters:
-        -
-          name: slug
+        - name: slug
           description: The service provider slug
           schema:
             type: string
           in: query
-        -
-          name: statuses
+        - name: statuses
           description: A comma seperated list of statuses to filter the service list
           schema:
             type: string
           in: query
           required: false
-        -
-          name: city
+        - name: city
           description: Filter service providers by city code
           schema:
             type: string
           in: query
-        -
-          name: state
+        - name: state
           description: Filter service providers by state code
           schema:
             type: string
           in: query
-        -
-          name: country
+        - name: country
           description: Filter service providers by country code
           schema:
             type: string
           in: query
-        -
-          name: search
+        - name: search
           description: Search the service providers by search term
           schema:
             type: string
           in: query
-        -
-          name: geohash
+        - name: geohash
           description: Filter the service providers by geohash
           schema:
             type: string
@@ -1092,8 +1051,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
       summary: Update Service Provider
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
@@ -1127,8 +1085,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Add Blocked Dates
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: Service provider id
         schema:
           format: uuid
@@ -1170,16 +1127,14 @@ paths:
           $ref: '#/components/responses/Forbidden'
       summary: Update Blocked Date
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: blockedDateId
+      - name: blockedDateId
         description: The blocked date id
         schema:
           format: uuid
@@ -1213,8 +1168,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Add amenities
     parameters:
-      -
-        name: serviceCategoryId
+      - name: serviceCategoryId
         description: The service category id
         schema:
           format: uuid
@@ -1261,16 +1215,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Amenity
     parameters:
-      -
-        name: serviceCategoryId
+      - name: serviceCategoryId
         description: The service category id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: amenityId
+      - name: amenityId
         description: The amenity id
         schema:
           format: uuid
@@ -1292,8 +1244,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: List Service Reviews
     parameters:
-      -
-        name: serviceId
+      - name: serviceId
         description: The service id
         schema:
           format: uuid
@@ -1325,8 +1276,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
       summary: Add Certification
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
@@ -1390,16 +1340,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Certification
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: certificationId
+      - name: certificationId
         description: The certification id
         schema:
           format: uuid
@@ -1437,16 +1385,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Upload Certification
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: certificationId
+      - name: certificationId
         description: The certification id
         schema:
           format: uuid
@@ -1484,16 +1430,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Upload Licence
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: licenceId
+      - name: licenceId
         description: The licence id
         schema:
           format: uuid
@@ -1505,20 +1449,17 @@ paths:
       tags:
         - Documents
       parameters:
-        -
-          name: search
+        - name: search
           description: The document type search terms
           schema:
             type: string
           in: query
-        -
-          name: stateCode
+        - name: stateCode
           description: Filter the document types by state code
           schema:
             type: string
           in: query
-        -
-          name: countryCode
+        - name: countryCode
           description: Filter the document type by country code
           schema:
             type: string
@@ -1561,26 +1502,22 @@ paths:
       tags:
         - Documents
       parameters:
-        -
-          name: search
+        - name: search
           description: Document requirement search terms
           schema:
             type: string
           in: query
-        -
-          name: countryCode
+        - name: countryCode
           description: Filter document requirements by country code
           schema:
             type: string
           in: query
-        -
-          name: stateCode
+        - name: stateCode
           description: Filter Document requirement by state code
           schema:
             type: string
           in: query
-        -
-          name: statuses
+        - name: statuses
           description: Filter document requirements by statuses e.g A comma separated list of statuses
           schema:
             type: string
@@ -1677,8 +1614,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Document Type
     parameters:
-      -
-        name: documentTypeId
+      - name: documentTypeId
         description: The document type id
         schema:
           format: uuid
@@ -1742,8 +1678,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Document Requirement
     parameters:
-      -
-        name: documentRequirementId
+      - name: documentRequirementId
         description: The document requirement id
         schema:
           format: uuid
@@ -1755,20 +1690,17 @@ paths:
       tags:
         - Service Providers
       parameters:
-        -
-          name: documentTypeId
+        - name: documentTypeId
           description: Filter the documents by document type
           schema:
             type: string
           in: query
-        -
-          name: documentRequirementId
+        - name: documentRequirementId
           description: Filter documents by document requirement id
           schema:
             type: string
           in: query
-        -
-          name: statuses
+        - name: statuses
           description: Filter documents by statuses e.g A comma separated list of statuses
           schema:
             type: string
@@ -1813,8 +1745,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Add Employee Provider Document
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
@@ -1872,16 +1803,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Update Service Provider Document
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: documentId
+      - name: documentId
         description: The document id
         schema:
           format: uuid
@@ -1919,16 +1848,14 @@ paths:
           $ref: '#/components/responses/NotFound'
       summary: Upload Service Provider Document
     parameters:
-      -
-        name: serviceProviderId
+      - name: serviceProviderId
         description: The service provider id
         schema:
           format: uuid
           type: string
         in: path
         required: true
-      -
-        name: documentId
+      - name: documentId
         description: The document id
         schema:
           format: uuid
@@ -4076,18 +4003,13 @@ components:
             $ref: '#/components/schemas/Error'
       description: There was an error with the request
 tags:
-  -
-    name: Licences
+  - name: Licences
     description: The service licences endpoints
-  -
-    name: Service Categories
+  - name: Service Categories
     description: The service category endpoints
-  -
-    name: Service Providers
+  - name: Service Providers
     description: The service provider endpoints
-  -
-    name: Services
+  - name: Services
     description: The services endpoints
-  -
-    name: Documents
+  - name: Documents
     description: The Document endpoints
