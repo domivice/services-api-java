@@ -12,6 +12,7 @@
         <module>services.domain</module>
         <module>services.application</module>
         <module>services.infrastructure</module>
+        <module>services.web</module>
     </modules>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
