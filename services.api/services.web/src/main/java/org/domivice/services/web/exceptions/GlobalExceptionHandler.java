@@ -36,12 +36,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = Throwable.class)
-    public Mono<ResponseEntity<ProblemDetail>> exception(Throwable exception) {
+    public Mono<ResponseEntity<ProblemDetail>> exception() {
         return Mono.just(new ResponseEntity<>(new ProblemDetail(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @ExceptionHandler(value = ServerWebInputException.class)
-    public Mono<ResponseEntity<ProblemDetail>> exception(ServerWebInputException exception, ServerWebExchange exchange){
+    public Mono<ResponseEntity<ProblemDetail>> exception(ServerWebExchange exchange){
         ProblemDetail problemDetail = new ProblemDetail()
                 .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
                 .instance(exchange.getRequest().getPath().toString())
