@@ -32,12 +32,12 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toMap(FieldError::getField, t -> List.of(Objects.requireNonNull(t.getDefaultMessage()))));
         problemDetail.setErrors(errors);
 
-        return Mono.justOrEmpty(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
+        return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
     }
 
     @ExceptionHandler(value = Throwable.class)
     public Mono<ResponseEntity<ProblemDetail>> exception(Throwable exception) {
-        return Mono.justOrEmpty(new ResponseEntity<>(new ProblemDetail(), HttpStatus.NOT_FOUND));
+        return Mono.just(new ResponseEntity<>(new ProblemDetail(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @ExceptionHandler(value = ServerWebInputException.class)
@@ -48,6 +48,6 @@ public class GlobalExceptionHandler {
                 .type("https://domivice.com/services/probs/request-format")
                 .title("Request formatting problem")
                 .detail("The request body is malformed");
-        return Mono.justOrEmpty(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
+        return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
     }
 }
