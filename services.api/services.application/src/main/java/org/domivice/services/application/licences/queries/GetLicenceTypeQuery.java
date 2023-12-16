@@ -1,6 +1,9 @@
 package org.domivice.services.application.licences.queries;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.domivice.services.application.common.queries.BaseQuery;
 

@@ -9,5 +9,6 @@ import java.util.UUID;
 @Repository
 public interface LicenceTypeRepository {
     Mono<LicenceType> insert(LicenceType licenceType);
+
     Mono<LicenceType> findOneById(UUID id);
 }

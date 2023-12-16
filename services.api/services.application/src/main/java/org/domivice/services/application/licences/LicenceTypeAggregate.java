@@ -29,7 +29,7 @@ public class LicenceTypeAggregate {
     }
 
     @EventSourcingHandler
-    public void on(@NotNull LicenceTypeCreatedEvent event){
+    public void on(@NotNull LicenceTypeCreatedEvent event) {
         id = event.getId();
         name = event.getName();
     }

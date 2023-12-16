@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = ServerWebInputException.class)
-    public Mono<ResponseEntity<ProblemDetail>> exception(ServerWebExchange exchange){
+    public Mono<ResponseEntity<ProblemDetail>> exception(ServerWebExchange exchange) {
         ProblemDetail problemDetail = new ProblemDetail()
                 .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
                 .instance(exchange.getRequest().getPath().toString())

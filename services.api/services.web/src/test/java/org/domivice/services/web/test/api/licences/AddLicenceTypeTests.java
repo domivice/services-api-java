@@ -12,9 +12,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(LicencesApiController.class)
 public class AddLicenceTypeTests {
+    private final String ENDPOINT = "/services/v1/licence-types";
     @Autowired
     private WebTestClient webClient;
-    private final String ENDPOINT = "/services/v1/licence-types";
 
     @Test
     public void shouldReturnProblemDetailWhenNameIsEmpty() {
