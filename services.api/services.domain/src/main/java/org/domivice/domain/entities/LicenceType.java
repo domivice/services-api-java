@@ -1,16 +1,31 @@
 package org.domivice.domain.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@SuperBuilder
 public class LicenceType extends BaseEntity<UUID> {
     private String name;
+
+    private LicenceType(String name) {
+        this.name = name;
+        this.id = UUID.randomUUID();
+        this.created = ZonedDateTime.now(ZoneOffset.UTC);
+        this.updated = ZonedDateTime.now(ZoneOffset.UTC);
+    }
+
+    protected LicenceType() {
+    }
+
+    public static LicenceType create(String name) {
+        return new LicenceType(name);
+    }
+
+    public void changeName(String newName) {
+        this.name = newName;
+        this.updated = ZonedDateTime.now(ZoneOffset.UTC);
+    }
 }

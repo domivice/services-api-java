@@ -32,11 +32,11 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 public class LicenceTypeAxonCommandServiceTests {
     @MockBean
+    SubscriptionQueryResult<List<LicenceType>, LicenceType> subscriptionQuery;
+    @MockBean
     private CommandGateway commandGateway;
     @MockBean
     private QueryGateway queryGateway;
-    @MockBean
-    SubscriptionQueryResult<List<LicenceType>, LicenceType> subscriptionQuery;
     @Autowired
     private LicenceTypeAxonCommandService commandService;
 
@@ -46,10 +46,7 @@ public class LicenceTypeAxonCommandServiceTests {
                 .id(UUID.randomUUID())
                 .name("New Licence")
                 .build();
-        var licenceType = LicenceType.builder()
-                .id(UUID.randomUUID())
-                .name(command.getName())
-                .build();
+        var licenceType = LicenceType.create(command.getName());
         var subscriptionQuery = new DefaultSubscriptionQueryResult<>(
                 Mono.just(List.of(licenceType)),
                 Flux.just(licenceType),

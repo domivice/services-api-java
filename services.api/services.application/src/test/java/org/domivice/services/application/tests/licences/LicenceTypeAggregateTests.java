@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 public class LicenceTypeAggregateTests {
-    FixtureConfiguration<LicenceTypeAggregate> fixture;
     private static final String LicenceTypeName = "New Licence Type";
+    FixtureConfiguration<LicenceTypeAggregate> fixture;
     private UUID id;
 
     @BeforeEach

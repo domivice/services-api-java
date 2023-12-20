@@ -19,10 +19,12 @@ public class LicenceTypeProjection {
 
     @EventHandler
     public void on(@NotNull LicenceTypeCreatedEvent event) {
-        LicenceType licenceType = LicenceType.builder().name(event.getName()).build();
+        var licenceType = LicenceType.create(event.getName());
+
         repository.insert(licenceType).subscribe(insertedLicenceType -> queryUpdateEmitter.emit(GetLicenceTypeQuery.class,
                 getLicenceTypeQuery -> getLicenceTypeQuery.getId().equals(event.getId()),
-                insertedLicenceType));
+                insertedLicenceType)
+        );
     }
 
     @QueryHandler

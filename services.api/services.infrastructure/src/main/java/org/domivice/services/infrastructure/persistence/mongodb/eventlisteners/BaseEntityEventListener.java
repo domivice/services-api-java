@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;
 
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Component
@@ -13,13 +12,5 @@ public class BaseEntityEventListener extends AbstractMongoEventListener<BaseEnti
     @Override
     public void onBeforeConvert(BeforeConvertEvent<BaseEntity<UUID>> event) {
         super.onBeforeConvert(event);
-        BaseEntity<UUID> entity = event.getSource();
-        if (entity.getId() == null) {
-            entity.setId(UUID.randomUUID());
-        }
-        if (entity.getCreated() == null) {
-            entity.setCreated(ZonedDateTime.now());
-        }
-        entity.setUpdated(ZonedDateTime.now());
     }
 }

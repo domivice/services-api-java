@@ -49,8 +49,8 @@ public class AddLicenceTypeTests {
 
     @Test
     public void shouldReturnStatusCreated() {
-        LicenceTypeCreate licenceTypeCreate = new LicenceTypeCreate().name("New Licence");
-        LicenceType licenceType = LicenceType.builder().name(licenceTypeCreate.getName()).build();
+        var licenceTypeCreate = new LicenceTypeCreate().name("New Licence");
+        var licenceType = LicenceType.create(licenceTypeCreate.getName());
         Mockito.when(commandService.addLicenceType(any(CreateLicenceTypeCommand.class)))
                 .thenReturn(Mono.just(licenceType));
         Mockito.when(modelMapper.map(any(LicenceType.class), any()))
