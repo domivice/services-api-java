@@ -15,17 +15,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class LicenceTypeCommandServiceImpl implements LicenceTypeCommandService {
+public class LicenceTypeAxonCommandService implements LicenceTypeCommandService {
     private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;
 
     @Override
     public Mono<LicenceType> addLicenceType(CreateLicenceTypeCommand command) {
-        GetLicenceTypeQuery query = GetLicenceTypeQuery
+        var query = GetLicenceTypeQuery
                 .builder()
                 .id(command.getId())
                 .build();
-        SubscriptionQueryResult<List<LicenceType>, LicenceType> subscriptionQuery = this.subscriptionQuery(query);
+        var subscriptionQuery = this.subscriptionQuery(query);
 
         return commandGateway
                 .send(command)
