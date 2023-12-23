@@ -2,6 +2,7 @@ package org.domivice.services.application.licences;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Aggregate
 @NoArgsConstructor
+@Slf4j
 public class LicenceTypeAggregate {
     @AggregateIdentifier
     private UUID id;
@@ -21,6 +23,7 @@ public class LicenceTypeAggregate {
 
     @CommandHandler
     public LicenceTypeAggregate(@NotNull CreateLicenceTypeCommand command) {
+        log.debug("Handling command {}", command);
         LicenceTypeCreatedEvent event = LicenceTypeCreatedEvent
                 .builder()
                 .id(command.getId())
