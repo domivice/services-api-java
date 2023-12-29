@@ -1,0 +1,19 @@
+spring:
+  data:
+    mongodb:
+      database: ${MONGODB_DATABASE:services}
+      uri: mongodb://${MONGODB_USERNAME:rootuser}:${MONGODB_PASSWORD:rootpass}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:services}?authSource=admin&uuidRepresentation=standard
+  docker:
+    compose:
+      file: ./services.web/compose.yaml
+  jackson:
+    date-format: org.domivice.services.openapi.RFC3339DateFormat
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  profiles:
+    active: local
+axon:
+  serializer:
+    events: jackson
+    general: jackson
+    messages: jackson
