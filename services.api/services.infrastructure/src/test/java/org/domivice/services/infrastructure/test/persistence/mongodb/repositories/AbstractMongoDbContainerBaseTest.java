@@ -1,8 +1,6 @@
 package org.domivice.services.infrastructure.test.persistence.mongodb.repositories;
 
 import org.domivice.services.infrastructure.persistence.mongodb.configurations.MongoConfig;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,23 +13,18 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ContextConfiguration(classes = MongoConfig.class)
 @EnableAutoConfiguration(exclude = {MongoAutoConfiguration.class})
 @Testcontainers
-public class MongoRepositoryTests {
+public abstract class AbstractMongoDbContainerBaseTest {
     @Container
-    private static final MongoDBContainer mongoContainer = new MongoDBContainer("mongo:latest");
+    private static final MongoDBContainer mongoContainer;
 
-    @BeforeAll
-    static void beforeAll() {
+    static {
+        mongoContainer = new MongoDBContainer("mongo:latest");
         mongoContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mongoContainer.stop();
     }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        String mongoUri = mongoContainer.getReplicaSetUrl() + "?authSource=admin&uuidRepresentation=standard";
+        String mongoUri = mongoContainer.getReplicaSetUrl() + "?authSource=admin&uuidRepresentation=standard&maxIdleTimeMS=0";
         registry.add("spring.data.mongodb.uri", () -> mongoUri);
         registry.add("spring.data.mongodb.database", () -> "tests");
     }
