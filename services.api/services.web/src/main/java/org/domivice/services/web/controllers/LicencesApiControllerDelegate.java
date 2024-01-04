@@ -23,7 +23,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
     private final LicenceTypeCommandService commandService;
 
     /**
-     * POST /services/v1/licence-types : Add Licence Type
+     * POST /services/v1/licence-types : Add Licence Type-
      *
      * @param licenceTypeCreate (required)
      * @param exchange

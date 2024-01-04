@@ -6,6 +6,7 @@ services:
       - 'MONGO_INITDB_DATABASE=services'
       - 'MONGO_INITDB_ROOT_PASSWORD=rootpass'
       - 'MONGO_INITDB_ROOT_USERNAME=rootuser'
+      - 'MONGO_UUID_REPRESENTATION=standard'
     ports:
       - '27017:27017'
     volumes:

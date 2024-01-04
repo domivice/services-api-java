@@ -7,10 +7,10 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = {
         "org.domivice.services.openapi",
-        "org.domivice.services.openapi.controllers",
-        "org.domivice.services.openapi.configurations",
+        "org.domivice.services.openapi.*",
         "org.domivice.services.application.*",
-        "org.domivice.services.infrastructure.*"
+        "org.domivice.services.infrastructure.*",
+        "org.domivice.services.web.*",
 })
 public class Application {
 
