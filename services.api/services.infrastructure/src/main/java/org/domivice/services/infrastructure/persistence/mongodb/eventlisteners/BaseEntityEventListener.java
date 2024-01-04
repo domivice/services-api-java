@@ -1,6 +1,6 @@
 package org.domivice.services.infrastructure.persistence.mongodb.eventlisteners;
 
-import org.domivice.domain.entities.BaseEntity;
+import org.domivice.services.domain.entities.BaseEntity;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;

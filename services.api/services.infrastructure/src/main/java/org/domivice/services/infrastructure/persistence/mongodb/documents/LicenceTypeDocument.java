@@ -3,7 +3,7 @@ package org.domivice.services.infrastructure.persistence.mongodb.documents;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.domivice.domain.entities.LicenceType;
+import org.domivice.services.domain.entities.LicenceType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

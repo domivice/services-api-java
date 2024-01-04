@@ -1,6 +1,6 @@
 package org.domivice.services.application.licences;
 
-import org.domivice.domain.entities.LicenceType;
+import org.domivice.services.domain.entities.LicenceType;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;

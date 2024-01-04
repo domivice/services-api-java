@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 
-public class AddLicenceTypeTests extends AbstractIntegrationTests {
+class AddLicenceTypeTests extends AbstractIntegrationTests {
     private final String ENDPOINT = "/services/v1/licence-types";
     @Autowired
     private WebTestClient webClient;
 
     @Test
     @DisplayName("Should Create Licence Type Success")
-    public void shouldReturnStatusCreated() {
+    void shouldReturnStatusCreated() {
         webClient
                 .post()
                 .uri(ENDPOINT)
@@ -28,7 +28,7 @@ public class AddLicenceTypeTests extends AbstractIntegrationTests {
 
     @DisplayName("Should return Problem Details When Name is Empty")
     @Test
-    public void shouldReturnProblemDetailWhenNameIsEmpty() {
+    void shouldReturnProblemDetailWhenNameIsEmpty() {
         LicenceTypeCreate licenceTypeCreate = new LicenceTypeCreate();
         webClient
                 .post()

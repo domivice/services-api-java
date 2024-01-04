@@ -35,11 +35,6 @@ public class GlobalExceptionHandler {
         return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
     }
 
-//    @ExceptionHandler(value = Throwable.class)
-//    public Mono<ResponseEntity<ProblemDetail>> exception() {
-//        return Mono.just(new ResponseEntity<>(new ProblemDetail(), HttpStatus.INTERNAL_SERVER_ERROR));
-//    }
-
     @ExceptionHandler(value = ServerWebInputException.class)
     public Mono<ResponseEntity<ProblemDetail>> exception(ServerWebExchange exchange) {
         ProblemDetail problemDetail = new ProblemDetail()

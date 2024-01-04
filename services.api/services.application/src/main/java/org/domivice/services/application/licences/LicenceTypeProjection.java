@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
-import org.domivice.domain.entities.LicenceType;
+import org.domivice.services.domain.entities.LicenceType;
 import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
 import org.springframework.stereotype.Component;

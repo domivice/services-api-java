@@ -1,4 +1,4 @@
-package org.domivice.domain.entities;
+package org.domivice.services.domain.entities;
 
 import lombok.Data;
 

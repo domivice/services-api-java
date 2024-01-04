@@ -33,11 +33,13 @@ public class MongoConfig extends AbstractReactiveMongoConfiguration {
     }
 
     @Bean
+    @Override
     public MongoClient reactiveMongoClient() {
         return MongoClients.create(this.mongoConnectionString);
     }
 
     @Bean
+    @Override
     public ReactiveMongoDatabaseFactory reactiveMongoDbFactory() {
         return super.reactiveMongoDbFactory();
     }

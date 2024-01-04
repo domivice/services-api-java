@@ -6,6 +6,7 @@ spring:
   docker:
     compose:
       file: ./services.web/docker-compose.yaml
+      enabled: false
   jackson:
     date-format: org.domivice.services.openapi.RFC3339DateFormat
     serialization:

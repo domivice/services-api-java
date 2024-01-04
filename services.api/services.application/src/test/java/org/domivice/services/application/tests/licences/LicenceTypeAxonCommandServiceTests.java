@@ -6,11 +6,12 @@ import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType;
 import org.axonframework.queryhandling.DefaultSubscriptionQueryResult;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.SubscriptionQueryResult;
-import org.domivice.domain.entities.LicenceType;
+import org.domivice.services.domain.entities.LicenceType;
 import org.domivice.services.application.licences.LicenceTypeAxonCommandService;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -30,7 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest(classes = LicenceTypeAxonCommandService.class)
 @ExtendWith(MockitoExtension.class)
-public class LicenceTypeAxonCommandServiceTests {
+class LicenceTypeAxonCommandServiceTests {
     @MockBean
     SubscriptionQueryResult<List<LicenceType>, LicenceType> subscriptionQuery;
     @MockBean
@@ -41,7 +42,8 @@ public class LicenceTypeAxonCommandServiceTests {
     private LicenceTypeAxonCommandService commandService;
 
     @Test
-    public void addLicenceType_should_return_added_LicenceType() {
+    @DisplayName("Add Licence Type Should Return Added Licence Type")
+    void addLicenceType_should_return_added_LicenceType() {
         var command = CreateLicenceTypeCommand.builder()
                 .id(UUID.randomUUID())
                 .name("New Licence")
