@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      database: ${MONGODB_DATABASE:services-test}
+      uri: mongodb://${MONGODB_USERNAME:rootuser}:${MONGODB_PASSWORD:rootpass}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:services-test}?authSource=admin&uuidRepresentation=standard

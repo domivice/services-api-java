@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: local
+axon:
+  serializer:
+    events: jackson
+    general: jackson
+    messages: jackson

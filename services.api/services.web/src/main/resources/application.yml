@@ -5,7 +5,7 @@ spring:
       uri: mongodb://${MONGODB_USERNAME:rootuser}:${MONGODB_PASSWORD:rootpass}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:services}?authSource=admin&uuidRepresentation=standard
   docker:
     compose:
-      file: ./services.web/compose.yaml
+      file: ./services.web/docker-compose.yaml
   jackson:
     date-format: org.domivice.services.openapi.RFC3339DateFormat
     serialization:
