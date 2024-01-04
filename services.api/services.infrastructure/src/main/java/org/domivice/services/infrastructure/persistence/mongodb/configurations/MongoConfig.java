@@ -1,8 +1,10 @@
 package org.domivice.services.infrastructure.persistence.mongodb.configurations;
 
+import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
+import org.bson.UuidRepresentation;
 import org.domivice.services.infrastructure.persistence.mongodb.converters.ZonedDateTimeReadConverter;
 import org.domivice.services.infrastructure.persistence.mongodb.converters.ZonedDateTimeWriteConverter;
 import org.springframework.boot.autoconfigure.mongo.MongoConnectionDetails;
@@ -14,18 +16,25 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
+import java.util.Objects;
+
 @Configuration
 @EnableReactiveMongoRepositories(basePackages = "org.domivice.services.infrastructure.persistence.mongodb.repositories")
 public class MongoConfig extends AbstractReactiveMongoConfiguration {
-    private final MongoConnectionDetails mongoConnectionDetails;
+    private final ConnectionString mongoConnectionString;
 
     public MongoConfig(MongoConnectionDetails mongoConnectionDetails) {
-        this.mongoConnectionDetails = mongoConnectionDetails;
+        var connectionString = mongoConnectionDetails.getConnectionString();
+        if (!Objects.equals(connectionString.getUuidRepresentation(), UuidRepresentation.STANDARD)) {
+            this.mongoConnectionString = new ConnectionString(connectionString + "&uuidRepresentation=standard");
+        } else {
+            this.mongoConnectionString = connectionString;
+        }
     }
 
     @Bean
     public MongoClient reactiveMongoClient() {
-        return MongoClients.create(this.mongoConnectionDetails.getConnectionString());
+        return MongoClients.create(this.mongoConnectionString);
     }
 
     @Bean
@@ -41,7 +50,7 @@ public class MongoConfig extends AbstractReactiveMongoConfiguration {
     @Override
     protected MongoClientSettings mongoClientSettings() {
         return MongoClientSettings.builder()
-                .applyConnectionString(this.mongoConnectionDetails.getConnectionString())
+                .applyConnectionString(this.mongoConnectionString)
                 .build();
     }
 
@@ -53,6 +62,6 @@ public class MongoConfig extends AbstractReactiveMongoConfiguration {
 
     @Override
     protected String getDatabaseName() {
-        return this.mongoConnectionDetails.getConnectionString().getDatabase();
+        return this.mongoConnectionString.getDatabase();
     }
 }
