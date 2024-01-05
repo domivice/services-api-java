@@ -18,3 +18,6 @@ axon:
     events: jackson
     general: jackson
     messages: jackson
+logging:
+  level:
+    org.domivice.services: DEBUG
