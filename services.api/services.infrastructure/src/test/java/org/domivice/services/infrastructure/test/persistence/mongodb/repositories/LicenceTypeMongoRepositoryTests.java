@@ -3,19 +3,17 @@ package org.domivice.services.infrastructure.test.persistence.mongodb.repositori
 import org.domivice.services.domain.entities.LicenceType;
 import org.domivice.services.infrastructure.persistence.mongodb.repositories.LicenceTypeMongoRepository;
 import org.domivice.services.infrastructure.test.persistence.mongodb.AbstractFunctionalTests;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = LicenceTypeMongoRepository.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LicenceTypeMongoRepositoryTests extends AbstractFunctionalTests {
     @Autowired
     private LicenceTypeMongoRepository repository;
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         repository.deleteAll().subscribe();
     }

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SpringDocConfiguration {
+public class SpringDocConfig {
     @Bean(name = "org.domivice.services.web.configurations.SpringDocConfiguration.apiInfo")
     OpenAPI apiInfo() {
         return new OpenAPI()

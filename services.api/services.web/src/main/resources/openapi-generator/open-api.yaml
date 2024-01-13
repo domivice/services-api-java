@@ -6,7 +6,7 @@ info:
   contact:
     name: Nelson Kana
     url: 'https://api.domivice.com'
-    email: nelson.kana@domivice.com
+    email: nelson.kana@domivice.jks.com
 paths:
   /services/v1/service-categories:
     get:

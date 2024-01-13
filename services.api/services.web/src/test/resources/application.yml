@@ -1,6 +1,13 @@
 spring:
   profiles:
     active: local
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://test/.well-known/openid-configuration/jwks
+          issuer-uri: https://test
+          audiences: services.api
 axon:
   serializer:
     events: jackson
