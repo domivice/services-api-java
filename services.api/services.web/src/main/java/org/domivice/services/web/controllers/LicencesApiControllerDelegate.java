@@ -7,8 +7,10 @@ import org.domivice.services.openapi.controllers.LicencesApi;
 import org.domivice.services.openapi.controllers.LicencesApiDelegate;
 import org.domivice.services.openapi.models.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -34,6 +36,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#addLicenceType
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceType>> addLicenceType(Mono<LicenceTypeCreate> licenceTypeCreate, ServerWebExchange exchange) {
         return licenceTypeCreate
                 .map(l -> CreateLicenceTypeCommand
