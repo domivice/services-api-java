@@ -26,11 +26,8 @@ public class LicenceTypeAxonCommandService implements LicenceTypeCommandService 
                 .id(command.getId())
                 .build();
         var subscriptionQuery = this.subscriptionQuery(query);
-
-        return commandGateway
-                .send(command)
-                .thenApply(e -> subscriptionQuery.updates().next())
-                .join();
+        return Mono.fromFuture(commandGateway.send(command))
+                .flatMap(e -> subscriptionQuery.updates().next().doFinally(s -> subscriptionQuery.close()));
     }
 
     private SubscriptionQueryResult<List<LicenceType>, LicenceType> subscriptionQuery(GetLicenceTypeQuery query) {

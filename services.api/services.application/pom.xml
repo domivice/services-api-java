@@ -35,5 +35,10 @@
             <version>${axon.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.axonframework.extensions.mongo</groupId>
+            <artifactId>axon-mongo-spring-boot-starter</artifactId>
+            <version>4.9.0</version>
+        </dependency>
     </dependencies>
 </project>

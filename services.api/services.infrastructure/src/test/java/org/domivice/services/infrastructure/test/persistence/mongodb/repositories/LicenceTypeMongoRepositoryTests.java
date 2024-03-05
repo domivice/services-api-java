@@ -2,14 +2,14 @@ package org.domivice.services.infrastructure.test.persistence.mongodb.repositori
 
 import org.domivice.services.domain.entities.LicenceType;
 import org.domivice.services.infrastructure.persistence.mongodb.repositories.LicenceTypeMongoRepository;
-import org.domivice.services.infrastructure.test.persistence.mongodb.AbstractFunctionalTests;
+import org.domivice.services.infrastructure.test.persistence.mongodb.MongoInfra;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = LicenceTypeMongoRepository.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class LicenceTypeMongoRepositoryTests extends AbstractFunctionalTests {
+class LicenceTypeMongoRepositoryTests extends MongoInfra {
     @Autowired
     private LicenceTypeMongoRepository repository;
 

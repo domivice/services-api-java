@@ -13,3 +13,11 @@ axon:
     events: jackson
     general: jackson
     messages: jackson
+  mongo:
+    database-name: axon
+    token-store:
+      enabled: false
+    saga-store:
+      enabled: false
+    event-store:
+      enabled: false

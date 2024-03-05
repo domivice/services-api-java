@@ -1,3 +1,11 @@
 spring:
   profiles:
     active: local
+axon:
+  mongo:
+    token-store:
+      enabled: false
+    saga-store:
+      enabled: false
+    event-store:
+      enabled: false

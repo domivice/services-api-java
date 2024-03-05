@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Import;
 
 @EnableAutoConfiguration
 @Import({ContainerConfiguration.class, MongoConfig.class})
-public class AbstractFunctionalTests {
+public class MongoInfra {
 }

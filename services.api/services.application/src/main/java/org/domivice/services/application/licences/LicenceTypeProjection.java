@@ -26,8 +26,7 @@ public class LicenceTypeProjection {
 
         repository.insert(licenceType).subscribe(insertedLicenceType -> queryUpdateEmitter.emit(GetLicenceTypeQuery.class,
                 getLicenceTypeQuery -> getLicenceTypeQuery.getId().equals(event.getId()),
-                insertedLicenceType)
-        );
+                insertedLicenceType));
     }
 
     @QueryHandler

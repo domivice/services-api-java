@@ -25,7 +25,27 @@ axon:
     events: jackson
     general: jackson
     messages: jackson
+  mongo:
+    database-name: axon
+    token-store:
+      enabled: false
+    saga-store:
+      enabled: false
+    event-store:
+      enabled: false
 logging:
   level:
     org.domivice.services: DEBUG
     org.springframework.security: DEBUG
+
+springdoc:
+  swagger-ui:
+    path: '/openapi/services/index.html'
+  api-docs:
+    path: '/openapi/services/1.0.0/openapi.json'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

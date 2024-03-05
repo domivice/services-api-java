@@ -11,7 +11,7 @@ public class CommandBusConfiguration {
     @Bean
     public CommandBus configureCommandBus() {
         CommandBus commandBus = SimpleCommandBus.builder().build();
-        commandBus.registerHandlerInterceptor(new BeanValidationInterceptor());
+        commandBus.registerHandlerInterceptor(new BeanValidationInterceptor<>());
         return commandBus;
     }
 }

@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .cors(ServerHttpSecurity.CorsSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/services/**").access(hasScope(audiences))
+                        .pathMatchers("/openapi/**").permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(
@@ -68,7 +70,7 @@ public class SecurityConfig {
 }
 
 class GrantedAuthoritiesExtractor implements Converter<Jwt, Collection<GrantedAuthority>> {
-    private String audiences;
+    private final String audiences;
 
     public GrantedAuthoritiesExtractor(String audiences) {
         this.audiences = audiences;
