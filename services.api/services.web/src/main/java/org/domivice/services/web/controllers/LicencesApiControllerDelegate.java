@@ -2,7 +2,9 @@ package org.domivice.services.web.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.domivice.services.application.licences.LicenceTypeCommandService;
+import org.domivice.services.application.licences.LicenceTypeQueryService;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
+import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
 import org.domivice.services.openapi.controllers.LicencesApi;
 import org.domivice.services.openapi.controllers.LicencesApiDelegate;
 import org.domivice.services.openapi.models.*;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -22,6 +25,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
 
     private final ModelMapper modelMapper;
     private final LicenceTypeCommandService commandService;
+    private final LicenceTypeQueryService queryService;
 
     /**
      * POST /services/v1/licence-types : Add Licence Type-
@@ -124,8 +128,16 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#getLicenceType
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceType>> getLicenceType(UUID licenceTypeId, ServerWebExchange exchange) {
-        return LicencesApiDelegate.super.getLicenceType(licenceTypeId, exchange);
+        return Mono.just(GetLicenceTypeQuery
+                        .builder()
+                        .licenceTypeId(licenceTypeId)
+                        .build())
+                .flatMap(queryService::getLicenceType)
+                .map(l -> modelMapper.map(l, LicenceType.class))
+                .map(l -> ResponseEntity.status(HttpStatus.OK).body(l))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Licence type not found")));
     }
 
     /**
