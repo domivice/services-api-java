@@ -5,6 +5,7 @@ import org.domivice.services.application.licences.LicenceTypeCommandService;
 import org.domivice.services.application.licences.LicenceTypeQueryService;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
+import org.domivice.services.application.licences.queries.GetLicenceTypesByName;
 import org.domivice.services.openapi.controllers.LicencesApi;
 import org.domivice.services.openapi.controllers.LicencesApiDelegate;
 import org.domivice.services.openapi.models.*;
@@ -17,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -170,7 +172,18 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      */
     @Override
     public Mono<ResponseEntity<LicenceTypeList>> listLicenceTypes(String search, ServerWebExchange exchange) {
-        return LicencesApiDelegate.super.listLicenceTypes(search, exchange);
+        return queryService.getLicenceTypesByName(
+                        GetLicenceTypesByName.builder().name(search).build()
+                )
+                .map(entity -> modelMapper.map(entity, LicenceType.class)) // map to LicenceType
+                .collectList() // collect all LicenceType objects into a list
+                .map(licenceTypes -> {
+                    LicenceTypeList licenceTypeList = new LicenceTypeList();
+                    licenceTypeList.setData(licenceTypes);
+                    licenceTypeList.setPageCount(BigDecimal.valueOf(1));
+                    licenceTypeList.setTotalItemsCount(BigDecimal.valueOf(licenceTypes.size()));
+                    return ResponseEntity.status(HttpStatus.OK).body(licenceTypeList);
+                });
     }
 
     /**

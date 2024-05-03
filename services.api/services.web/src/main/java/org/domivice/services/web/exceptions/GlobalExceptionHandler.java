@@ -3,11 +3,9 @@ package org.domivice.services.web.exceptions;
 import org.domivice.services.openapi.models.ProblemDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
@@ -58,17 +56,5 @@ public class GlobalExceptionHandler {
                 .title(ex.getReason())
                 .detail(ex.getBody().getDetail());
         return Mono.just(new ResponseEntity<>(problemDetail, ex.getStatusCode()));
-    }
-
-    //TODO: Fix this
-    @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ProblemDetail handleAuthenticationException(AuthenticationException ex, ServerWebExchange exchange) {
-        return new ProblemDetail()
-                .status(String.valueOf(HttpStatus.UNAUTHORIZED.value()))
-                .instance(exchange.getRequest().getPath().toString())
-                .type("https://domivice.com/services/probs/unauthorized")
-                .title("User is not authenticated")
-                .detail(ex.getMessage());
     }
 }

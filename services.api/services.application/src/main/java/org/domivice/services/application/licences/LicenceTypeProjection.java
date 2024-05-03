@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
+import org.domivice.services.application.licences.queries.GetLicenceTypesByName;
 import org.domivice.services.domain.entities.LicenceType;
 import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -33,5 +35,11 @@ public class LicenceTypeProjection {
     public Mono<LicenceType> handle(GetLicenceTypeQuery query) {
         log.debug("Handling query {}", query);
         return repository.findOneById(query.getLicenceTypeId());
+    }
+
+    @QueryHandler
+    public Flux<LicenceType> handle(GetLicenceTypesByName query){
+        log.debug("Handling query {}", query);
+        return repository.findByNameLikeIgnoreCase(query.getName());
     }
 }
