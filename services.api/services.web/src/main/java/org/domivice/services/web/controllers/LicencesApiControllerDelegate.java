@@ -9,6 +9,7 @@ import org.domivice.services.application.licences.queries.GetLicenceTypesByName;
 import org.domivice.services.openapi.controllers.LicencesApi;
 import org.domivice.services.openapi.controllers.LicencesApiDelegate;
 import org.domivice.services.openapi.models.*;
+import org.domivice.services.web.constants.PaginationConstants;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +45,14 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
     @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceType>> addLicenceType(Mono<LicenceTypeCreate> licenceTypeCreate, ServerWebExchange exchange) {
         return licenceTypeCreate
-                .map(l -> CreateLicenceTypeCommand
-                        .builder()
-                        .id(UUID.randomUUID())
-                        .name(l.getName())
-                        .build())
-                .flatMap(commandService::addLicenceType)
-                .map(l -> modelMapper.map(l, LicenceType.class))
-                .map(l -> ResponseEntity.status(HttpStatus.CREATED).body(l));
+            .map(l -> CreateLicenceTypeCommand
+                .builder()
+                .id(UUID.randomUUID())
+                .name(l.getName())
+                .build())
+            .flatMap(commandService::addLicenceType)
+            .map(l -> modelMapper.map(l, LicenceType.class))
+            .map(l -> ResponseEntity.status(HttpStatus.CREATED).body(l));
     }
 
     /**
@@ -133,13 +134,13 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
     @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceType>> getLicenceType(UUID licenceTypeId, ServerWebExchange exchange) {
         return Mono.just(GetLicenceTypeQuery
-                        .builder()
-                        .licenceTypeId(licenceTypeId)
-                        .build())
-                .flatMap(queryService::getLicenceType)
-                .map(l -> modelMapper.map(l, LicenceType.class))
-                .map(l -> ResponseEntity.status(HttpStatus.OK).body(l))
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Licence type not found")));
+                .builder()
+                .licenceTypeId(licenceTypeId)
+                .build())
+            .flatMap(queryService::getLicenceType)
+            .map(l -> modelMapper.map(l, LicenceType.class))
+            .map(l -> ResponseEntity.status(HttpStatus.OK).body(l))
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Licence type not found")));
     }
 
     /**
@@ -149,6 +150,9 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @param countryCode   Filter licence issuer by country code (optional)
      * @param stateCode     Filter licence issuers by state code (optional)
      * @param licenceTypeId Filter licence type by licence type (optional)
+     * @param page          The page requested. Page parameter can only be a positive integer greater than 0. (optional)
+     * @param pageSize      The requested page size. Page size can only be between 1 and 100 (optional)
+     * @param sort          The result sorting. field1[:asc|desc][,field2[:asc|desc]] e.g. firstName:desc,email:asc (optional)
      * @param exchange
      * @return Response when 0 or more licence types are returned  (status code 200)
      * or User is not authenticated (status code 401)
@@ -156,14 +160,17 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#listLicenceIssuers
      */
     @Override
-    public Mono<ResponseEntity<LicenceIssuerList>> listLicenceIssuers(String search, String countryCode, String stateCode, String licenceTypeId, ServerWebExchange exchange) {
-        return LicencesApiDelegate.super.listLicenceIssuers(search, countryCode, stateCode, licenceTypeId, exchange);
+    public Mono<ResponseEntity<LicenceIssuerList>> listLicenceIssuers(String search, String countryCode, String stateCode, String licenceTypeId, Integer page, Integer pageSize, String sort, ServerWebExchange exchange) {
+        return LicencesApiDelegate.super.listLicenceIssuers(search, countryCode, stateCode, licenceTypeId, page, pageSize, sort, exchange);
     }
 
     /**
      * GET /services/v1/licence-types : List Licence Types
      *
      * @param search   The licence type search term (optional)
+     * @param page     The page requested. Page parameter can only be a positive integer greater than 0. (optional)
+     * @param pageSize The requested page size. Page size can only be between 1 and 100 (optional)
+     * @param sort     The result sorting. field1[:asc|desc][,field2[:asc|desc]] e.g. firstName:desc,email:asc (optional)
      * @param exchange
      * @return Response when 0 or more licence types are returned (status code 200)
      * or User is not authenticated (status code 401)
@@ -171,19 +178,30 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#listLicenceTypes
      */
     @Override
-    public Mono<ResponseEntity<LicenceTypeList>> listLicenceTypes(String search, ServerWebExchange exchange) {
-        return queryService.getLicenceTypesByName(
-                        GetLicenceTypesByName.builder().name(search).build()
-                )
-                .map(entity -> modelMapper.map(entity, LicenceType.class)) // map to LicenceType
-                .collectList() // collect all LicenceType objects into a list
-                .map(licenceTypes -> {
-                    LicenceTypeList licenceTypeList = new LicenceTypeList();
-                    licenceTypeList.setData(licenceTypes);
-                    licenceTypeList.setPageCount(BigDecimal.valueOf(1));
-                    licenceTypeList.setTotalItemsCount(BigDecimal.valueOf(licenceTypes.size()));
-                    return ResponseEntity.status(HttpStatus.OK).body(licenceTypeList);
-                });
+    @PreAuthorize("hasRole('AppAdmin')")
+    public Mono<ResponseEntity<LicenceTypeList>> listLicenceTypes(
+        String search,
+        Integer page,
+        Integer pageSize,
+        String sort,
+        ServerWebExchange exchange) {
+        int finalPage = page != null ? page : PaginationConstants.DEFAULT_PAGE;
+        int finalPageSize = pageSize != null ? pageSize : PaginationConstants.DEFAULT_PAGE_SIZE;
+        return queryService.getLicenceTypesByName(GetLicenceTypesByName.builder()
+                .name(search)
+                .page(finalPage)
+                .pageSize(finalPageSize)
+                .sort(sort != null ? sort : "name:asc")
+                .build()
+            ).map(entity -> modelMapper.map(entity, LicenceType.class)) // map to LicenceType
+            .collectList() // collect all LicenceType objects into a list
+            .map(licenceTypes -> {
+                LicenceTypeList licenceTypeList = new LicenceTypeList();
+                licenceTypeList.setData(licenceTypes);
+                licenceTypeList.setPageCount(BigDecimal.valueOf(finalPage));
+                licenceTypeList.setTotalItemsCount(BigDecimal.valueOf(licenceTypes.size()));
+                return ResponseEntity.status(HttpStatus.OK).body(licenceTypeList);
+            });
     }
 
     /**

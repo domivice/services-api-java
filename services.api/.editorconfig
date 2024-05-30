@@ -1,0 +1,21 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+continuation_indent_size = 4
+tab_width = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.java]
+max_line_length = 120
+indent_brace_style = K&R
+brace_style = java
+space_before_conditional = true
+space_after_comma = true
+space_after_semicolon = true
+space_around_binary_operators = true
+space_around_assign_operators = true
+indent_case_labels = true
+unescape_strings = true

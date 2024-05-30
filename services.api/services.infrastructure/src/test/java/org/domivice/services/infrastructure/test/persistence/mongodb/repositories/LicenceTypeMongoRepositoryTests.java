@@ -6,6 +6,11 @@ import org.domivice.services.infrastructure.test.persistence.mongodb.MongoInfra;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
+
+import java.util.List;
 
 @SpringBootTest(classes = LicenceTypeMongoRepository.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -15,50 +20,108 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
 
     @BeforeAll
     void setUp() {
-        repository.deleteAll().subscribe();
+        repository.deleteAll().block();
     }
 
     @Test
     @DisplayName("Repository Should Insert Licence Type Success")
     void repositoryShouldInsertLicenceTypeSuccess() {
+        //Given
         var licenceType = LicenceType.create("Licence Type");
+
+        //Act
         var insertedLicenceType = repository.insert(licenceType).block();
+
+        //Assert
         Assertions.assertNotNull(insertedLicenceType);
-        Assertions.assertEquals(insertedLicenceType.getClass(), LicenceType.class);
+        Assertions.assertEquals(licenceType.getId(), insertedLicenceType.getId());
     }
 
     @Test
     @DisplayName("Repository Should Find One Licence Type Success")
     void repositoryShouldFindOneLicenceTypeSuccess() {
+        // Given
         var licenceType = LicenceType.create("Licence Type");
-        var insertedLicenceType = repository.insert(licenceType).block();
-        Assertions.assertNotNull(insertedLicenceType);
-        var retrievedLicenceType = repository.findOneById(insertedLicenceType.getId()).block();
+        seedDatabase(licenceType);
+
+        // Act
+        var retrievedLicenceType = repository.findOneById(licenceType.getId()).block();
+
+        //Assert
         Assertions.assertNotNull(retrievedLicenceType);
-        Assertions.assertEquals(insertedLicenceType.getId(), retrievedLicenceType.getId());
+        Assertions.assertEquals(licenceType.getId(), retrievedLicenceType.getId());
     }
 
     @Test
     @DisplayName("Repository Should Search Licence Types by name")
     void repositoryShouldFindByNameLikeSuccess() {
-        // Arrange: Insert LicenseType records
-        repository.insert(LicenceType.create("Driver's Licence")).block();
-        repository.insert(LicenceType.create("Medical Licence")).block();
-        repository.insert(LicenceType.create("Psychiatrist Licence")).block();
+        // Given
+        seedDatabase(
+            LicenceType.create("Business License"),
+            LicenceType.create("Driver's License"),
+            LicenceType.create("Professional License"),
+            LicenceType.create("Marriage License"),
+            LicenceType.create("Fishing License")
+        );
 
-        // Act: Search for LicenseType by name
-        var licenceType = repository.findByNameLikeIgnoreCase("Licence").blockFirst();
+        // Act
+        var searchTerm = "license";
+        Flux<LicenceType> licenseTypesFlux = repository.findByNameLikeIgnoreCase(searchTerm, Pageable.ofSize(10));
 
-        // Assert: Verify the found LicenceType
-        Assertions.assertNotNull(licenceType, "Found LicenceType should not be null");
-        Assertions.assertEquals("Driver's Licence", licenceType.getName(), "Found LicenceType name should match search criteria");
+        // Assert
+        List<LicenceType> licenseTypes = licenseTypesFlux.collectList().block();
+        Assertions.assertNotNull(licenseTypes, "Found LicenceType should not be null");
+        Assertions.assertTrue(licenseTypes.size() >= 5, "There should be a least 5 licence types");
+        for (LicenceType licenceType : licenseTypes) {
+            Assertions.assertTrue(licenceType.getName().toLowerCase().contains(searchTerm),
+                "License type name should contain the search term:" + searchTerm);
+        }
+    }
 
-        // Additional assertions for improved test coverage
-        var nonExistentLicenceType = repository.findByNameLikeIgnoreCase("Non-existent").blockFirst();
-        Assertions.assertNull(nonExistentLicenceType, "Non-existent LicenceType should be null");
+    @Test
+    @DisplayName("Repository should return all licence types")
+    void repositoryShouldReturnAllLicenceTypes() {
+        // Given
+        seedDatabase(
+            LicenceType.create("Business License"),
+            LicenceType.create("Driver's License"),
+            LicenceType.create("Professional License"),
+            LicenceType.create("Marriage License"),
+            LicenceType.create("Fishing License")
+        );
 
-        var caseInsensitiveLicenceType = repository.findByNameLikeIgnoreCase("licence").blockFirst();
-        Assertions.assertNotNull(caseInsensitiveLicenceType, "Case-insensitive search should find a LicenceType");
-        Assertions.assertEquals("Driver's Licence", caseInsensitiveLicenceType.getName(), "Case-insensitive search should match");
+        // Act
+        Flux<LicenceType> licenseTypesFlux = repository.findBy(Pageable.ofSize(10));
+
+        // Assert
+        List<LicenceType> licenseTypes = licenseTypesFlux.collectList().block();
+        Assertions.assertNotNull(licenseTypes, "Find by method should return license types");
+        Assertions.assertTrue(licenseTypes.size() >= 5, "Should return at least 5 license types");
+    }
+
+    @Test
+    @DisplayName("Repository should return an empty list")
+    void repositoryShouldReturnEmptyList(){
+        //Given
+        seedDatabase(
+            LicenceType.create("Business License")
+        );
+
+        // Act
+        var searchTerm = "non existent licence type";
+        Flux<LicenceType> licenseTypesFlux = repository.findByNameLikeIgnoreCase(searchTerm, Pageable.ofSize(10));
+
+        // Assert
+        List<LicenceType> licenseTypes = licenseTypesFlux.collectList().block();
+        Assertions.assertNotNull(licenseTypes, "Find by method should return a list");
+        Assertions.assertEquals(0, licenseTypes.size(), "The list should be empty");
+    }
+
+    private void seedDatabase(LicenceType... licenceTypes) {
+        for (LicenceType licenceType : licenceTypes) {
+            StepVerifier.create(repository.insert(licenceType))
+                .expectNextCount(1)
+                .verifyComplete();
+        }
     }
 }

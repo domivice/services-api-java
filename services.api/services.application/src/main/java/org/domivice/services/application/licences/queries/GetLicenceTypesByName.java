@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.domivice.services.application.common.queries.BaseQuery;
+import org.domivice.services.application.common.queries.PageableQuery;
 
 @Data
 @SuperBuilder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetLicenceTypesByName extends BaseQuery {
+public class GetLicenceTypesByName extends PageableQuery {
     private String name;
 }
