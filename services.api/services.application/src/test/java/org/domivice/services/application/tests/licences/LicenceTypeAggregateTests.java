@@ -24,17 +24,17 @@ class LicenceTypeAggregateTests {
 
     @Test
     @DisplayName("Create Licence Type Command Should Dispatch Created Licence Type Event")
-    void should_dispatch_licence_type_created_event_when_create_licence_type_command() {
+    void shouldDispatchLicenceTypeCreatedEventWhenCreateLicenceTypeCommand() {
         fixture.givenNoPriorActivity()
-                .when(CreateLicenceTypeCommand.builder()
-                        .id(id)
-                        .name(LicenceTypeName)
-                        .build()
-                )
-                .expectEvents(LicenceTypeCreatedEvent.builder()
-                        .id(id)
-                        .name(LicenceTypeName)
-                        .build()
-                );
+            .when(CreateLicenceTypeCommand.builder()
+                .id(id)
+                .name(LicenceTypeName)
+                .build()
+            )
+            .expectEvents(LicenceTypeCreatedEvent.builder()
+                .id(id)
+                .name(LicenceTypeName)
+                .build()
+            );
     }
 }

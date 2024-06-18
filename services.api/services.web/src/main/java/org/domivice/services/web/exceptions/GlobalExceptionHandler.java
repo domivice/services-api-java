@@ -1,5 +1,6 @@
 package org.domivice.services.web.exceptions;
 
+import org.domivice.services.domain.exceptions.ValidationException;
 import org.domivice.services.openapi.models.ProblemDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +23,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = WebExchangeBindException.class)
     public Mono<ResponseEntity<ProblemDetail>> exception(WebExchangeBindException exception, ServerWebExchange exchange) {
         ProblemDetail problemDetail = new ProblemDetail()
-                .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
-                .instance(exchange.getRequest().getPath().toString())
-                .type("https://domivice.com/services/probs/validation-error")
-                .title("A validation error occurred")
-                .detail("One or more fields are invalid");
+            .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
+            .instance(exchange.getRequest().getPath().toString())
+            .type("https://domivice.com/services/probs/validation-error")
+            .title("A validation error occurred")
+            .detail("One or more fields are invalid");
         Map<String, List<String>> errors = exception.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .collect(Collectors.toMap(FieldError::getField, t -> List.of(Objects.requireNonNull(t.getDefaultMessage()))));
+            .getFieldErrors()
+            .stream()
+            .collect(Collectors.toMap(FieldError::getField, t -> List.of(Objects.requireNonNull(t.getDefaultMessage()))));
         problemDetail.setErrors(errors);
 
         return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
@@ -39,22 +40,34 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = ServerWebInputException.class)
     public Mono<ResponseEntity<ProblemDetail>> exception(ServerWebExchange exchange) {
         ProblemDetail problemDetail = new ProblemDetail()
-                .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
-                .instance(exchange.getRequest().getPath().toString())
-                .type("https://domivice.com/services/probs/request-format")
-                .title("Request formatting problem")
-                .detail("The request body is malformed");
+            .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
+            .instance(exchange.getRequest().getPath().toString())
+            .type("https://domivice.com/services/probs/request-format")
+            .title("Request formatting problem")
+            .detail("The request body is malformed");
+        return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(value = ValidationException.class)
+    public Mono<ResponseEntity<ProblemDetail>> exception(ValidationException exception, ServerWebExchange exchange) {
+        ProblemDetail problemDetail = new ProblemDetail()
+            .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
+            .instance(exchange.getRequest().getPath().toString())
+            .type("https://domivice.com/services/probs/validation-error")
+            .title("A validation error occurred")
+            .detail("One or more fields are invalid")
+            .errors(exception.getErrors());
         return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
     }
 
     @ExceptionHandler(ResponseStatusException.class)
     public Mono<ResponseEntity<ProblemDetail>> exception(ResponseStatusException ex, ServerWebExchange exchange) {
         ProblemDetail problemDetail = new ProblemDetail()
-                .status(String.valueOf(ex.getStatusCode().value()))
-                .instance(exchange.getRequest().getPath().toString())
-                .type("https://domivice.com/services/probs/not-found")
-                .title(ex.getReason())
-                .detail(ex.getBody().getDetail());
+            .status(String.valueOf(ex.getStatusCode().value()))
+            .instance(exchange.getRequest().getPath().toString())
+            .type("https://domivice.com/services/probs/not-found")
+            .title(ex.getReason())
+            .detail(ex.getBody().getDetail());
         return Mono.just(new ResponseEntity<>(problemDetail, ex.getStatusCode()));
     }
 }

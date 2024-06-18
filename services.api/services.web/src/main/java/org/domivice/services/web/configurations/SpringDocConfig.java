@@ -11,18 +11,18 @@ public class SpringDocConfig {
     @Bean(name = "org.domivice.services.web.configurations.SpringDocConfiguration.apiInfo")
     OpenAPI apiInfo() {
         return new OpenAPI()
-                .info(
-                        new Info()
-                                .title("Services API")
-                                .description("The services API")
-                                .contact(
-                                        new Contact()
-                                                .name("Nelson Kana")
-                                                .url("https://api.domivice.com")
-                                                .email("nelson.kana@domivice.com")
-                                )
-                                .version("1.0.0")
-                )
-                ;
+            .info(
+                new Info()
+                    .title("Services API")
+                    .description("The services API")
+                    .contact(
+                        new Contact()
+                            .name("Nelson Kana")
+                            .url("https://api.domivice.com")
+                            .email("nelson.kana@domivice.com")
+                    )
+                    .version("1.0.0")
+            )
+            ;
     }
 }

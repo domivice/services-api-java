@@ -39,26 +39,26 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
         http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .cors(ServerHttpSecurity.CorsSpec::disable)
-                .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/services/**").access(hasScope(audiences))
-                        .pathMatchers("/openapi/**").permitAll()
-                        .pathMatchers("/actuator/**").permitAll()
-                        .anyExchange().authenticated()
-                )
-                .oauth2ResourceServer(
-                        oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtractor(audiences)))
-                );
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .cors(ServerHttpSecurity.CorsSpec::disable)
+            .authorizeExchange(exchanges -> exchanges
+                .pathMatchers("/services/**").access(hasScope(audiences))
+                .pathMatchers("/openapi/**").permitAll()
+                .pathMatchers("/actuator/**").permitAll()
+                .anyExchange().authenticated()
+            )
+            .oauth2ResourceServer(
+                oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtractor(audiences)))
+            );
         return http.build();
     }
 
     @Bean
     public ReactiveJwtDecoder reactiveJwtDecoder() {
         return NimbusReactiveJwtDecoder
-                .withJwkSetUri(jwkSetUri)
-                .jwtProcessorCustomizer(jwtProcessor -> jwtProcessor.setJWSTypeVerifier(new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("at+jwt"))))
-                .build();
+            .withJwkSetUri(jwkSetUri)
+            .jwtProcessorCustomizer(jwtProcessor -> jwtProcessor.setJWSTypeVerifier(new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("at+jwt"))))
+            .build();
     }
 
     Converter<Jwt, Mono<AbstractAuthenticationToken>> grantedAuthoritiesExtractor(String audiences) {

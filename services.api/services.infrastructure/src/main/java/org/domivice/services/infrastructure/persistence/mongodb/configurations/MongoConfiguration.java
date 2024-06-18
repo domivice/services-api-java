@@ -20,10 +20,10 @@ import java.util.Objects;
 
 @Configuration
 @EnableReactiveMongoRepositories(basePackages = "org.domivice.services.infrastructure.persistence.mongodb.repositories")
-public class MongoConfig extends AbstractReactiveMongoConfiguration {
+public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     private final ConnectionString mongoConnectionString;
 
-    public MongoConfig(MongoConnectionDetails mongoConnectionDetails) {
+    public MongoConfiguration(MongoConnectionDetails mongoConnectionDetails) {
         var connectionString = mongoConnectionDetails.getConnectionString();
         if (!Objects.equals(connectionString.getUuidRepresentation(), UuidRepresentation.STANDARD)) {
             this.mongoConnectionString = new ConnectionString(connectionString + "&uuidRepresentation=standard");
@@ -52,8 +52,8 @@ public class MongoConfig extends AbstractReactiveMongoConfiguration {
     @Override
     protected MongoClientSettings mongoClientSettings() {
         return MongoClientSettings.builder()
-                .applyConnectionString(this.mongoConnectionString)
-                .build();
+            .applyConnectionString(this.mongoConnectionString)
+            .build();
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import java.util.List;
+import java.util.regex.Pattern;
 
 @SpringBootTest(classes = LicenceTypeMongoRepository.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -20,7 +20,7 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
 
     @BeforeAll
     void setUp() {
-        repository.deleteAll().block();
+        StepVerifier.create(repository.deleteAll()).verifyComplete();
     }
 
     @Test
@@ -29,12 +29,13 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
         //Given
         var licenceType = LicenceType.create("Licence Type");
 
-        //Act
-        var insertedLicenceType = repository.insert(licenceType).block();
-
-        //Assert
-        Assertions.assertNotNull(insertedLicenceType);
-        Assertions.assertEquals(licenceType.getId(), insertedLicenceType.getId());
+        // Act & Assert
+        StepVerifier.create(repository.insert(licenceType))
+            .assertNext(insertedLicenceType -> {
+                Assertions.assertNotNull(insertedLicenceType);
+                Assertions.assertEquals(licenceType.getId(), insertedLicenceType.getId());
+            })
+            .verifyComplete();
     }
 
     @Test
@@ -44,17 +45,18 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
         var licenceType = LicenceType.create("Licence Type");
         seedDatabase(licenceType);
 
-        // Act
-        var retrievedLicenceType = repository.findOneById(licenceType.getId()).block();
-
-        //Assert
-        Assertions.assertNotNull(retrievedLicenceType);
-        Assertions.assertEquals(licenceType.getId(), retrievedLicenceType.getId());
+        // Act & Assert
+        StepVerifier.create(repository.findOneById(licenceType.getId()))
+            .assertNext(retrievedLicenceType -> {
+                Assertions.assertNotNull(retrievedLicenceType);
+                Assertions.assertEquals(licenceType.getId(), retrievedLicenceType.getId());
+            })
+            .verifyComplete();
     }
 
     @Test
     @DisplayName("Repository Should Search Licence Types by name")
-    void repositoryShouldFindByNameLikeSuccess() {
+    void repositoryShouldSearchByLicenceTypeNameSuccess() {
         // Given
         seedDatabase(
             LicenceType.create("Business License"),
@@ -66,16 +68,17 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
 
         // Act
         var searchTerm = "license";
-        Flux<LicenceType> licenseTypesFlux = repository.findByNameLikeIgnoreCase(searchTerm, Pageable.ofSize(10));
+        String regex = "(?i).*" + Pattern.quote(removeDiacritics(searchTerm)) + ".*";
+        Flux<LicenceType> licenseTypesFlux = repository.searchByLicenceType(searchTerm, Pageable.ofSize(10));
 
         // Assert
-        List<LicenceType> licenseTypes = licenseTypesFlux.collectList().block();
-        Assertions.assertNotNull(licenseTypes, "Found LicenceType should not be null");
-        Assertions.assertTrue(licenseTypes.size() >= 5, "There should be a least 5 licence types");
-        for (LicenceType licenceType : licenseTypes) {
-            Assertions.assertTrue(licenceType.getName().toLowerCase().contains(searchTerm),
-                "License type name should contain the search term:" + searchTerm);
-        }
+        StepVerifier.create(licenseTypesFlux.collectList())
+            .expectNextMatches(licenceTypeList -> {
+                Assertions.assertNotNull(licenceTypeList, "List should not be null");
+                return licenceTypeList.stream().allMatch(
+                    licenceType -> Pattern.matches(regex, removeDiacritics(licenceType.getName()))
+                );
+            }).verifyComplete();
     }
 
     @Test
@@ -94,14 +97,17 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
         Flux<LicenceType> licenseTypesFlux = repository.findBy(Pageable.ofSize(10));
 
         // Assert
-        List<LicenceType> licenseTypes = licenseTypesFlux.collectList().block();
-        Assertions.assertNotNull(licenseTypes, "Find by method should return license types");
-        Assertions.assertTrue(licenseTypes.size() >= 5, "Should return at least 5 license types");
+        StepVerifier.create(licenseTypesFlux.collectList())
+            .expectNextMatches(licenseTypeList -> {
+                Assertions.assertNotNull(licenseTypeList, "Find by method should return license types");
+                return licenseTypeList.size() >= 5;
+            })
+            .verifyComplete();
     }
 
     @Test
     @DisplayName("Repository should return an empty list")
-    void repositoryShouldReturnEmptyList(){
+    void repositoryShouldReturnEmptyList() {
         //Given
         seedDatabase(
             LicenceType.create("Business License")
@@ -109,12 +115,15 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
 
         // Act
         var searchTerm = "non existent licence type";
-        Flux<LicenceType> licenseTypesFlux = repository.findByNameLikeIgnoreCase(searchTerm, Pageable.ofSize(10));
+        Flux<LicenceType> licenseTypesFlux = repository.searchByLicenceType(searchTerm, Pageable.ofSize(10));
 
         // Assert
-        List<LicenceType> licenseTypes = licenseTypesFlux.collectList().block();
-        Assertions.assertNotNull(licenseTypes, "Find by method should return a list");
-        Assertions.assertEquals(0, licenseTypes.size(), "The list should be empty");
+        StepVerifier.create(licenseTypesFlux.collectList())
+            .expectNextMatches(licenseTypeList -> {
+                Assertions.assertNotNull(licenseTypeList, "Find by method should return license types");
+                return licenseTypeList.isEmpty();
+            })
+            .verifyComplete();
     }
 
     private void seedDatabase(LicenceType... licenceTypes) {

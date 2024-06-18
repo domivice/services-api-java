@@ -1,4 +1,4 @@
-package org.domivice.services.application.licences;
+package org.domivice.services.application.licences.services;
 
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
@@ -22,8 +22,8 @@ public class LicenceTypeAxonQueryService implements LicenceTypeQueryService {
     @Override
     public Mono<LicenceType> getLicenceType(GetLicenceTypeQuery query) {
         return Mono.fromFuture(() -> queryGateway
-                        .query(query, ResponseTypes.instanceOf(LicenceType.class)))
-                .flatMap(Mono::justOrEmpty);
+                .query(query, ResponseTypes.instanceOf(LicenceType.class)))
+            .flatMap(Mono::justOrEmpty);
     }
 
     /**
@@ -33,6 +33,6 @@ public class LicenceTypeAxonQueryService implements LicenceTypeQueryService {
     @Override
     public Flux<LicenceType> getLicenceTypesByName(GetLicenceTypesByName query) {
         return Mono.fromFuture(() -> queryGateway.query(query, ResponseTypes.multipleInstancesOf(LicenceType.class)))
-                .flatMapMany(Flux::fromIterable);
+            .flatMapMany(Flux::fromIterable);
     }
 }

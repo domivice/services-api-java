@@ -1,11 +1,14 @@
 package org.domivice.services.web.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.domivice.services.application.licences.LicenceTypeCommandService;
-import org.domivice.services.application.licences.LicenceTypeQueryService;
+import org.domivice.services.application.licenceissuers.commands.CreateLicenceIssuerCommand;
+import org.domivice.services.application.licenceissuers.services.LicenceIssuerCommandService;
+import org.domivice.services.application.licenceissuers.services.LicenceIssuerQueryService;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
 import org.domivice.services.application.licences.queries.GetLicenceTypesByName;
+import org.domivice.services.application.licences.services.LicenceTypeCommandService;
+import org.domivice.services.application.licences.services.LicenceTypeQueryService;
 import org.domivice.services.openapi.controllers.LicencesApi;
 import org.domivice.services.openapi.controllers.LicencesApiDelegate;
 import org.domivice.services.openapi.models.*;
@@ -27,8 +30,10 @@ import java.util.UUID;
 public class LicencesApiControllerDelegate implements LicencesApiDelegate {
 
     private final ModelMapper modelMapper;
-    private final LicenceTypeCommandService commandService;
-    private final LicenceTypeQueryService queryService;
+    private final LicenceTypeCommandService licenceTypeCommandService;
+    private final LicenceTypeQueryService licenceTypeQueryService;
+    private final LicenceIssuerCommandService licenceIssuerCommandService;
+    private final LicenceIssuerQueryService licenceIssuerQueryService;
 
     /**
      * POST /services/v1/licence-types : Add Licence Type-
@@ -50,7 +55,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
                 .id(UUID.randomUUID())
                 .name(l.getName())
                 .build())
-            .flatMap(commandService::addLicenceType)
+            .flatMap(licenceTypeCommandService::addLicenceType)
             .map(l -> modelMapper.map(l, LicenceType.class))
             .map(l -> ResponseEntity.status(HttpStatus.CREATED).body(l));
     }
@@ -67,8 +72,19 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#addLicenceTypeIssuer
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceIssuer>> addLicenceTypeIssuer(Mono<LicenceIssuerCreate> licenceIssuerCreate, ServerWebExchange exchange) {
-        return LicencesApiDelegate.super.addLicenceTypeIssuer(licenceIssuerCreate, exchange);
+        return licenceIssuerCreate
+            .map(payload -> CreateLicenceIssuerCommand.builder()
+                .id(UUID.randomUUID())
+                .issuerName(payload.getIssuerName())
+                .issuingCountryCode(payload.getIssuingCountryCode())
+                .issuingStateCode(payload.getIssuingStateCode())
+                .licenceTypeId(payload.getLicenceTypeId())
+                .build())
+            .flatMap(licenceIssuerCommandService::addLicenceIssuer)
+            .map(entity -> modelMapper.map(entity, LicenceIssuer.class))
+            .map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response));
     }
 
     /**
@@ -137,7 +153,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
                 .builder()
                 .licenceTypeId(licenceTypeId)
                 .build())
-            .flatMap(queryService::getLicenceType)
+            .flatMap(licenceTypeQueryService::getLicenceType)
             .map(l -> modelMapper.map(l, LicenceType.class))
             .map(l -> ResponseEntity.status(HttpStatus.OK).body(l))
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Licence type not found")));
@@ -187,7 +203,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
         ServerWebExchange exchange) {
         int finalPage = page != null ? page : PaginationConstants.DEFAULT_PAGE;
         int finalPageSize = pageSize != null ? pageSize : PaginationConstants.DEFAULT_PAGE_SIZE;
-        return queryService.getLicenceTypesByName(GetLicenceTypesByName.builder()
+        return licenceTypeQueryService.getLicenceTypesByName(GetLicenceTypesByName.builder()
                 .name(search)
                 .page(finalPage)
                 .pageSize(finalPageSize)

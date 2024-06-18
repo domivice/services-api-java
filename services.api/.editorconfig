@@ -19,3 +19,8 @@ space_around_binary_operators = true
 space_around_assign_operators = true
 indent_case_labels = true
 unescape_strings = true
+
+[*.yml]
+indent_size = 2
+continuation_indent_size = 2
+tab_width = 2

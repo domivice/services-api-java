@@ -10,7 +10,14 @@ import java.util.UUID;
 
 public interface LicenceTypeRepository {
     Mono<LicenceType> insert(LicenceType licenceType);
+
     Mono<LicenceType> findOneById(UUID id);
-    Flux<LicenceType> findByNameLikeIgnoreCase(String name, Pageable pageable);
+
     Flux<LicenceType> findBy(Pageable pageable);
+
+    Flux<LicenceType> searchByLicenceType(String text, Pageable pageable);
+
+    Mono<Boolean> existsById(UUID id);
+
+    Mono<Void> deleteAll();
 }

@@ -25,9 +25,9 @@ public class LicenceTypeAggregate {
     public LicenceTypeAggregate(@NotNull CreateLicenceTypeCommand command) {
         log.debug("Handling command {}", command);
         LicenceTypeCreatedEvent event = LicenceTypeCreatedEvent
-                .builder()
-                .id(command.getId())
-                .name(command.getName()).build();
+            .builder()
+            .id(command.getId())
+            .name(command.getName()).build();
         AggregateLifecycle.apply(event);
     }
 

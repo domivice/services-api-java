@@ -1,7 +1,7 @@
 package org.domivice.services.web.test.api.licences;
 
+import org.domivice.services.application.licences.LicenceTypeRepository;
 import org.domivice.services.domain.entities.LicenceType;
-import org.domivice.services.infrastructure.persistence.mongodb.repositories.LicenceTypeMongoRepository;
 import org.domivice.services.openapi.models.LicenceTypeList;
 import org.domivice.services.web.AbstractIntegrationTests;
 import org.junit.jupiter.api.Assertions;
@@ -36,11 +36,11 @@ class ListLicenceTypeTests extends AbstractIntegrationTests {
     @Autowired
     private WebTestClient webClient;
     @Autowired
-    private LicenceTypeMongoRepository repository;
+    private LicenceTypeRepository repository;
 
     @BeforeEach
     void setUp() {
-        repository.deleteAll().block();
+        StepVerifier.create(repository.deleteAll()).verifyComplete();
         seedDatabase(
             LicenceType.create("Business License"),
             LicenceType.create("Driver's License"),

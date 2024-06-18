@@ -17,13 +17,14 @@ public class CommandBusConfiguration {
         commandBus.registerHandlerInterceptor(new BeanValidationInterceptor<>());
         return commandBus;
     }
+
     @Qualifier("messageSerializer")
     @Bean
     public JacksonSerializer messageSerializer(ObjectMapper mapper) {
         return JacksonSerializer.builder()
-                .objectMapper(mapper)
-                .lenientDeserialization()
-                .defaultTyping()
-                .build();
+            .objectMapper(mapper)
+            .lenientDeserialization()
+            .defaultTyping()
+            .build();
     }
 }

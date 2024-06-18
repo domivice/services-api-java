@@ -51,7 +51,7 @@ public class LicenceTypeProjection {
             );
         }
 
-        return repository.findByNameLikeIgnoreCase(
+        return repository.searchByLicenceType(
             query.getName(),
             PageRequest.of(
                 query.getPage() - 1,

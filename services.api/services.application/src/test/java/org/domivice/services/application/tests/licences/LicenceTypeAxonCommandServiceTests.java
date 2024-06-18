@@ -6,10 +6,10 @@ import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType;
 import org.axonframework.queryhandling.DefaultSubscriptionQueryResult;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.SubscriptionQueryResult;
-import org.domivice.services.domain.entities.LicenceType;
-import org.domivice.services.application.licences.LicenceTypeAxonCommandService;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
+import org.domivice.services.application.licences.services.LicenceTypeAxonCommandService;
+import org.domivice.services.domain.entities.LicenceType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,29 +43,29 @@ class LicenceTypeAxonCommandServiceTests {
 
     @Test
     @DisplayName("Add Licence Type Should Return Added Licence Type")
-    void addLicenceType_should_return_added_LicenceType() {
+    void addLicenceTypeShouldReturnAddedLicenceType() {
         var command = CreateLicenceTypeCommand.builder()
-                .id(UUID.randomUUID())
-                .name("New Licence")
-                .build();
+            .id(UUID.randomUUID())
+            .name("New Licence")
+            .build();
         var licenceType = LicenceType.create(command.getName());
         var subscriptionQuery = new DefaultSubscriptionQueryResult<>(
-                Mono.just(List.of(licenceType)),
-                Flux.just(licenceType),
-                () -> true
+            Mono.just(List.of(licenceType)),
+            Flux.just(licenceType),
+            () -> true
         );
 
         Mockito.doReturn(CompletableFuture.supplyAsync(() -> Mono.just(licenceType)))
-                .when(commandGateway)
-                .send(any(CreateLicenceTypeCommand.class));
+            .when(commandGateway)
+            .send(any(CreateLicenceTypeCommand.class));
         Mockito.doReturn(subscriptionQuery)
-                .when(queryGateway)
-                .subscriptionQuery(any(GetLicenceTypeQuery.class),
-                        ArgumentMatchers.<MultipleInstancesResponseType<LicenceType>>any(),
-                        ArgumentMatchers.<InstanceResponseType<LicenceType>>any());
+            .when(queryGateway)
+            .subscriptionQuery(any(GetLicenceTypeQuery.class),
+                ArgumentMatchers.<MultipleInstancesResponseType<LicenceType>>any(),
+                ArgumentMatchers.<InstanceResponseType<LicenceType>>any());
 
         commandService.addLicenceType(command)
-                .switchIfEmpty(Mono.defer(Assertions::fail))
-                .subscribe(e -> Assertions.assertEquals(e, licenceType));
+            .switchIfEmpty(Mono.defer(Assertions::fail))
+            .subscribe(e -> Assertions.assertEquals(e, licenceType));
     }
 }

@@ -13,11 +13,12 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageableQuery extends BaseQuery{
+public class PageableQuery extends BaseQuery {
     private int page;
     private int pageSize;
     private String sort;
-    public Sort getSortQuery(){
+
+    public Sort getSortQuery() {
         if (sort == null || sort.isEmpty()) {
             return Sort.unsorted();
         }
@@ -28,8 +29,8 @@ public class PageableQuery extends BaseQuery{
             String[] fieldAndDirection = field.split(":");
             String fieldName = fieldAndDirection[0];
             Sort.Direction direction = fieldAndDirection.length > 1
-                    ? Sort.Direction.fromString(fieldAndDirection[1])
-                    : Sort.Direction.ASC;
+                ? Sort.Direction.fromString(fieldAndDirection[1])
+                : Sort.Direction.ASC;
             orders.add(new Sort.Order(direction, fieldName));
         }
 
