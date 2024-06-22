@@ -1,6 +1,8 @@
 package org.domivice.services.infrastructure.persistence.mongodb.documents;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.domivice.services.domain.entities.LicenceIssuer;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

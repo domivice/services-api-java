@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
     public static final String VALIDATION_ERROR_PROBLEM_TYPE = "https://domivice.com/services/probs/validation-error";
     public static final String REQUEST_FORMAT_PROBLEM_TYPE = "https://domivice.com/services/probs/request-format";
     public static final String NOT_FOUND_PROBLEM_TYPE = "https://domivice.com/services/probs/not-found";
+
     @ExceptionHandler(value = WebExchangeBindException.class)
     public Mono<ResponseEntity<ProblemDetail>> exception(WebExchangeBindException exception, ServerWebExchange exchange) {
         ProblemDetail problemDetail = new ProblemDetail()
@@ -63,6 +64,7 @@ public class GlobalExceptionHandler {
             .errors(exception.getErrors());
         return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
     }
+
     @ExceptionHandler(value = NotFoundException.class)
     public Mono<ResponseEntity<ProblemDetail>> exception(NotFoundException exception, ServerWebExchange exchange) {
         ProblemDetail problemDetail = new ProblemDetail()

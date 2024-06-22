@@ -30,6 +30,7 @@ class UpdateLicenceTypeTests extends AbstractIntegrationTests {
     private LicenceTypeRepository repository;
     @Autowired
     private LicenceTypeCommandService licenceTypeCommandService;
+
     @BeforeEach
     void setUp() {
         StepVerifier.create(repository.deleteAll()).verifyComplete();
@@ -69,6 +70,7 @@ class UpdateLicenceTypeTests extends AbstractIntegrationTests {
                 });
         }).verifyComplete();
     }
+
     @DisplayName("404Test: Should return status not found")
     @Test
     void shouldReturnStatusNotFound() {

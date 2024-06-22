@@ -11,7 +11,7 @@ public interface LicenceIssuerRepository {
     Mono<LicenceIssuer> insert(LicenceIssuer licenceIssuer);
 
     Mono<LicenceIssuer> findOneById(UUID id);
-    
+
     Flux<LicenceIssuer> findByIssuingCountryCode(String issuingCountryCode, Pageable pageable);
 
     Flux<LicenceIssuer> findByIssuingStateCode(String issuingStateCode, Pageable pageable);

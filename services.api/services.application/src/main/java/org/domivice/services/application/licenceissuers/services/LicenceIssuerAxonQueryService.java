@@ -3,8 +3,8 @@ package org.domivice.services.application.licenceissuers.services;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
-import org.domivice.services.application.licenceissuers.queries.GetLicenceIssuerByCountryCode;
-import org.domivice.services.application.licenceissuers.queries.GetLicenceIssuerByStateCode;
+import org.domivice.services.application.licenceissuers.queries.GetLicenceIssuerByCountryCodeQuery;
+import org.domivice.services.application.licenceissuers.queries.GetLicenceIssuerByStateCodeQuery;
 import org.domivice.services.application.licenceissuers.queries.GetLicenceIssuerQuery;
 import org.domivice.services.application.licenceissuers.queries.SearchLicenceIssuerQuery;
 import org.domivice.services.domain.entities.LicenceIssuer;
@@ -32,7 +32,7 @@ public class LicenceIssuerAxonQueryService implements LicenceIssuerQueryService 
      * @return
      */
     @Override
-    public Flux<LicenceIssuer> getLicenceIssuerByCountryCode(GetLicenceIssuerByCountryCode query) {
+    public Flux<LicenceIssuer> getLicenceIssuerByCountryCode(GetLicenceIssuerByCountryCodeQuery query) {
         return Mono.fromFuture(() -> queryGateway.query(query, ResponseTypes.multipleInstancesOf(LicenceIssuer.class)))
             .flatMapMany(Flux::fromIterable);
     }
@@ -42,7 +42,7 @@ public class LicenceIssuerAxonQueryService implements LicenceIssuerQueryService 
      * @return
      */
     @Override
-    public Flux<LicenceIssuer> getLicenceIssuerByStateCode(GetLicenceIssuerByStateCode query) {
+    public Flux<LicenceIssuer> getLicenceIssuerByStateCode(GetLicenceIssuerByStateCodeQuery query) {
         return Mono.fromFuture(() -> queryGateway.query(query, ResponseTypes.multipleInstancesOf(LicenceIssuer.class)))
             .flatMapMany(Flux::fromIterable);
     }

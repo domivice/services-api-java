@@ -1,6 +1,8 @@
 package org.domivice.services.infrastructure.persistence.mongodb.documents;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.domivice.services.domain.entities.LicenceType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,6 +17,7 @@ import java.util.UUID;
 public class LicenceTypeDocument extends LicenceType {
     @Id
     private UUID id;
+
     private LicenceTypeDocument(UUID id, String name, ZonedDateTime create, ZonedDateTime updated) {
         this.name = name;
         this.id = id;

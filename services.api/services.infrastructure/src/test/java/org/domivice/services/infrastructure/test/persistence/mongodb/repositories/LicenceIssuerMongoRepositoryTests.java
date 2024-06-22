@@ -72,9 +72,9 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
     void repositoryShouldSearchByIssuerNameSuccess() {
         // Given
         seedDatabase(
-            LicenceIssuer.create(UUID.randomUUID(),"Régie du bâtiment du Québec", "CA", "QC", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"Société de l'assurance automobile du Québec", "CA", "QC", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"Collège des médecins du Québec", "CA", "QC", UUID.randomUUID())
+            LicenceIssuer.create(UUID.randomUUID(), "Régie du bâtiment du Québec", "CA", "QC", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "Société de l'assurance automobile du Québec", "CA", "QC", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "Collège des médecins du Québec", "CA", "QC", UUID.randomUUID())
         );
 
         // Act & Assert
@@ -98,13 +98,13 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
         // Given
         seedDatabase(
             // US Licenses
-            LicenceIssuer.create(UUID.randomUUID(),"Driver's License", "US", "CA", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"Medical License", "US", "NY", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"California Board of Psychology", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "Driver's License", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "Medical License", "US", "NY", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "California Board of Psychology", "US", "CA", UUID.randomUUID()),
             // Canada Licenses
-            LicenceIssuer.create(UUID.randomUUID(),"Driver's Licence", "CA", "ON", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"Medical Licence", "CA", "QC", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"College of Psychologists of Ontario", "CA", "ON", UUID.randomUUID())
+            LicenceIssuer.create(UUID.randomUUID(), "Driver's Licence", "CA", "ON", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "Medical Licence", "CA", "QC", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "College of Psychologists of Ontario", "CA", "ON", UUID.randomUUID())
         );
 
         // Act
@@ -127,13 +127,13 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
         // Given
         seedDatabase(
             // Licenses from California (CA)
-            LicenceIssuer.create(UUID.randomUUID(),"Driver's License", "US", "CA", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"Medical License", "US", "CA", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"California Board of Psychology", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "Driver's License", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "Medical License", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "California Board of Psychology", "US", "CA", UUID.randomUUID()),
             // Licenses from New York (NY)
-            LicenceIssuer.create(UUID.randomUUID(),"Driver's License", "US", "NY", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"Medical License", "US", "NY", UUID.randomUUID()),
-            LicenceIssuer.create(UUID.randomUUID(),"New York State Board for Psychology", "US", "NY", UUID.randomUUID())
+            LicenceIssuer.create(UUID.randomUUID(), "Driver's License", "US", "NY", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "Medical License", "US", "NY", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(), "New York State Board for Psychology", "US", "NY", UUID.randomUUID())
         );
 
         //Act

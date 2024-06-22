@@ -8,6 +8,8 @@ import reactor.core.publisher.Mono;
 
 public interface LicenceTypeCommandService {
     Mono<LicenceType> addLicenceType(CreateLicenceTypeCommand command);
+
     Mono<LicenceType> updateLicenceType(UpdateLicenceTypeCommand command);
+
     Mono<Void> deleteLicenceType(DeleteLicenceTypeCommand command);
 }

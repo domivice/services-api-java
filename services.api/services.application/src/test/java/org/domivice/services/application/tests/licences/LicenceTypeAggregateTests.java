@@ -2,7 +2,6 @@ package org.domivice.services.application.tests.licences;
 
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
-import org.axonframework.test.matchers.Matchers;
 import org.domivice.services.application.licences.LicenceTypeAggregate;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
 import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;

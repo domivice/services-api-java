@@ -69,7 +69,7 @@ public class LicenceTypeAggregate {
     }
 
     @EventSourcingHandler
-    public void on(@NotNull LicenceTypeDeletedEvent event){
+    public void on(@NotNull LicenceTypeDeletedEvent event) {
         name = null;
     }
 }

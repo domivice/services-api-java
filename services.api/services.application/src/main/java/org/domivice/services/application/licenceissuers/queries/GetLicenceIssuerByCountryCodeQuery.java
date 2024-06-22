@@ -12,6 +12,6 @@ import org.domivice.services.application.common.queries.PageableQuery;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetLicenceIssuerByCountryCode extends PageableQuery {
+public class GetLicenceIssuerByCountryCodeQuery extends PageableQuery {
     private String issuingCountryCode;
 }

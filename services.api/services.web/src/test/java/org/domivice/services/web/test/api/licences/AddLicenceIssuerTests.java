@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.test.StepVerifier;
 
@@ -31,7 +30,7 @@ class AddLicenceIssuerTests extends AbstractIntegrationTests {
     @Test
     @DisplayName("201Test: Should Create Licence Issuer Success")
     void shouldReturnStatusCreated() {
-        var licenceType = LicenceType.create(UUID.randomUUID(),"Licence Type");
+        var licenceType = LicenceType.create(UUID.randomUUID(), "Licence Type");
         // Insert the licence type and verify the insertion
         StepVerifier.create(licenceTypeRepository.insert(licenceType))
             .expectNextCount(1).verifyComplete();

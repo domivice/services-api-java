@@ -15,7 +15,8 @@ public class LicenceIssuer extends BaseEntity<UUID> {
     protected String issuingStateCode;
     protected UUID licenceTypeId;
 
-    protected LicenceIssuer(){}
+    protected LicenceIssuer() {
+    }
 
     private LicenceIssuer(UUID id, String issuerName, String issuingCountryCode, String issuingStateCode, UUID licenceTypeId) {
         this.issuerName = issuerName;
@@ -45,7 +46,7 @@ public class LicenceIssuer extends BaseEntity<UUID> {
         return new LicenceIssuer(id, issuerName, issuingCountryCode, issuingStateCode, licenceTypeId, created, updated);
     }
 
-    public void changeIssuerName(String issuerName){
+    public void changeIssuerName(String issuerName) {
         this.issuerName = issuerName;
         this.updated = ZonedDateTime.now(ZoneOffset.UTC);
     }

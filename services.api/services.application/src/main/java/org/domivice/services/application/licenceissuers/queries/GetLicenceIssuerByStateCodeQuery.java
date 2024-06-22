@@ -10,6 +10,6 @@ import org.domivice.services.application.common.queries.PageableQuery;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetLicenceIssuerByStateCode extends PageableQuery {
+public class GetLicenceIssuerByStateCodeQuery extends PageableQuery {
     private String issuingStateCode;
 }
