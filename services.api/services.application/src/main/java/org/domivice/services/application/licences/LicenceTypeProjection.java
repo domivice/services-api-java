@@ -7,6 +7,8 @@ import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;
+import org.domivice.services.application.licences.events.LicenceTypeDeletedEvent;
+import org.domivice.services.application.licences.events.LicenceTypeUpdatedEvent;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
 import org.domivice.services.application.licences.queries.GetLicenceTypesByName;
 import org.domivice.services.domain.entities.LicenceType;
@@ -24,12 +26,49 @@ public class LicenceTypeProjection {
 
     @EventHandler
     public void on(@NotNull LicenceTypeCreatedEvent event) {
-        log.debug("Handling event {}", event);
-        var licenceType = LicenceType.create(event.getName());
+        log.debug("Handling created event {}", event);
+        repository.existsById(event.getAggregateId())
+            .flatMap(exists -> {
+                if (exists.equals(Boolean.TRUE)) {
+                    log.debug("LicenceType with id {} already exists. Skipping insert.", event.getAggregateId());
+                    return Mono.empty();
+                } else {
+                    LicenceType licenceType = LicenceType.create(event.getAggregateId(), event.getName());
+                    return repository.insert(licenceType)
+                        .doOnNext(insertedLicenceType -> queryUpdateEmitter.emit(
+                            GetLicenceTypeQuery.class,
+                            query -> query.getAggregateId().equals(event.getAggregateId()),
+                            insertedLicenceType
+                        ));
+                }
+            }).onErrorResume(e -> {
+                log.error("Error handling LicenceTypeCreatedEvent for id {}: {}", event.getAggregateId(), e.getMessage());
+                return Mono.empty(); // or handle the error accordingly
+            }).subscribe();
+    }
 
-        repository.insert(licenceType).subscribe(insertedLicenceType -> queryUpdateEmitter.emit(GetLicenceTypeQuery.class,
-            getLicenceTypeQuery -> getLicenceTypeQuery.getId().equals(event.getId()),
-            insertedLicenceType));
+    @EventHandler
+    public void on(@NotNull LicenceTypeUpdatedEvent event) {
+        log.debug("Handling updated event {}", event);
+
+        // Update the licence type in the repository
+        repository.findOneById(event.getAggregateId()).flatMap(existingLicenceType -> {
+            existingLicenceType.changeName(event.getName());
+            return repository.update(existingLicenceType);
+        }).subscribe(updatedLicenceType ->
+            // Emit the updated licence type to any interested queries
+            queryUpdateEmitter.emit(GetLicenceTypeQuery.class,
+                getLicenceTypeQuery -> getLicenceTypeQuery.getAggregateId().equals(event.getAggregateId()),
+                updatedLicenceType)
+        );
+    }
+
+    @EventHandler
+    public void on(@NotNull LicenceTypeDeletedEvent event) {
+        log.debug("Handling deleted event {}", event);
+        repository.findOneById(event.getAggregateId())
+            .flatMap(licenceType -> repository.delete(licenceType.getId()))
+            .subscribe();
     }
 
     @QueryHandler

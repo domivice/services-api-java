@@ -22,12 +22,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 
 class AddLicenceIssuerTests extends AbstractIntegrationTests {
     private final String ENDPOINT = "/services/v1/licence-issuers";
-    private final String AUDIENCE = "services.api";
-    private final String ADMIN_ROLE = "AppAdmin";
-    private final String TOKEN_TYPE = "at+jwt";
-    private final SecurityMockServerConfigurers.JwtMutator authorizedJwtMutator = mockJwt()
-        .jwt(jwt -> jwt.header("typ", TOKEN_TYPE))
-        .authorities(new SimpleGrantedAuthority("ROLE_" + ADMIN_ROLE), new SimpleGrantedAuthority("SCOPE_" + AUDIENCE));
+
     @Autowired
     private WebTestClient webClient;
     @Autowired
@@ -36,7 +31,7 @@ class AddLicenceIssuerTests extends AbstractIntegrationTests {
     @Test
     @DisplayName("201Test: Should Create Licence Issuer Success")
     void shouldReturnStatusCreated() {
-        var licenceType = LicenceType.create("Licence Type");
+        var licenceType = LicenceType.create(UUID.randomUUID(),"Licence Type");
         // Insert the licence type and verify the insertion
         StepVerifier.create(licenceTypeRepository.insert(licenceType))
             .expectNextCount(1).verifyComplete();

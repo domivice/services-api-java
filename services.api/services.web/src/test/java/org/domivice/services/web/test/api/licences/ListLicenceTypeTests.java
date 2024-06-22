@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.test.StepVerifier;
 
@@ -24,15 +23,7 @@ class ListLicenceTypeTests extends AbstractIntegrationTests {
     private static final int PAGE_SIZE = 5;
     private static final String SORT = "name:asc";
     private final String ENDPOINT = "/services/v1/licence-types";
-    private final String AUDIENCE = "services.api";
-    private final String ADMIN_ROLE = "AppAdmin";
-    private final String TOKEN_TYPE = "at+jwt";
-    private final SecurityMockServerConfigurers.JwtMutator authorizedJwtMutator = mockJwt()
-        .jwt(jwt -> jwt.header("typ", TOKEN_TYPE))
-        .authorities(
-            new SimpleGrantedAuthority("ROLE_" + ADMIN_ROLE),
-            new SimpleGrantedAuthority("SCOPE_" + AUDIENCE)
-        );
+
     @Autowired
     private WebTestClient webClient;
     @Autowired
@@ -42,21 +33,21 @@ class ListLicenceTypeTests extends AbstractIntegrationTests {
     void setUp() {
         StepVerifier.create(repository.deleteAll()).verifyComplete();
         seedDatabase(
-            LicenceType.create("Business License"),
-            LicenceType.create("Driver's License"),
-            LicenceType.create("Professional License"),
-            LicenceType.create("Marriage License"),
-            LicenceType.create("Fishing License"),
-            LicenceType.create("Hunting License"),
-            LicenceType.create("Building Permit"),
-            LicenceType.create("Liquor License"),
-            LicenceType.create("Health Permit"),
-            LicenceType.create("Pet License"),
-            LicenceType.create("Broadcasting License"),
-            LicenceType.create("Import/Export License"),
-            LicenceType.create("Software License"),
-            LicenceType.create("Pilot's License"),
-            LicenceType.create("Real Estate License")
+            LicenceType.create(UUID.randomUUID(), "Business License"),
+            LicenceType.create(UUID.randomUUID(), "Driver's License"),
+            LicenceType.create(UUID.randomUUID(), "Professional License"),
+            LicenceType.create(UUID.randomUUID(), "Marriage License"),
+            LicenceType.create(UUID.randomUUID(), "Fishing License"),
+            LicenceType.create(UUID.randomUUID(), "Hunting License"),
+            LicenceType.create(UUID.randomUUID(), "Building Permit"),
+            LicenceType.create(UUID.randomUUID(), "Liquor License"),
+            LicenceType.create(UUID.randomUUID(), "Health Permit"),
+            LicenceType.create(UUID.randomUUID(), "Pet License"),
+            LicenceType.create(UUID.randomUUID(), "Broadcasting License"),
+            LicenceType.create(UUID.randomUUID(), "Import/Export License"),
+            LicenceType.create(UUID.randomUUID(), "Software License"),
+            LicenceType.create(UUID.randomUUID(), "Pilot's License"),
+            LicenceType.create(UUID.randomUUID(), "Real Estate License")
         );
     }
 

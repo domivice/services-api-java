@@ -9,7 +9,11 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
+import org.domivice.services.application.licences.commands.DeleteLicenceTypeCommand;
+import org.domivice.services.application.licences.commands.UpdateLicenceTypeCommand;
 import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;
+import org.domivice.services.application.licences.events.LicenceTypeDeletedEvent;
+import org.domivice.services.application.licences.events.LicenceTypeUpdatedEvent;
 
 import java.util.UUID;
 
@@ -23,17 +27,49 @@ public class LicenceTypeAggregate {
 
     @CommandHandler
     public LicenceTypeAggregate(@NotNull CreateLicenceTypeCommand command) {
-        log.debug("Handling command {}", command);
-        LicenceTypeCreatedEvent event = LicenceTypeCreatedEvent
+        log.debug("Handling create command {}", command);
+        AggregateLifecycle.apply(LicenceTypeCreatedEvent
             .builder()
-            .id(command.getId())
-            .name(command.getName()).build();
-        AggregateLifecycle.apply(event);
+            .eventId(UUID.randomUUID())
+            .aggregateId(command.getAggregateId())
+            .name(command.getName()).build()
+        );
+    }
+
+    @CommandHandler
+    public void handle(@NotNull UpdateLicenceTypeCommand command) {
+        log.debug("Handling update command {}", command);
+        AggregateLifecycle.apply(LicenceTypeUpdatedEvent
+            .builder()
+            .eventId(UUID.randomUUID())
+            .aggregateId(command.getAggregateId())
+            .name(command.getName()).build()
+        );
+    }
+
+    @CommandHandler
+    public void handle(@NotNull DeleteLicenceTypeCommand command) {
+        log.debug("Handling delete command {}", command);
+        AggregateLifecycle.apply(LicenceTypeDeletedEvent.builder()
+            .aggregateId(command.getAggregateId())
+            .eventId(UUID.randomUUID())
+            .build()
+        );
     }
 
     @EventSourcingHandler
     public void on(@NotNull LicenceTypeCreatedEvent event) {
-        id = event.getId();
+        id = event.getAggregateId();
         name = event.getName();
+    }
+
+    @EventSourcingHandler
+    public void on(@NotNull LicenceTypeUpdatedEvent event) {
+        name = event.getName();
+    }
+
+    @EventSourcingHandler
+    public void on(@NotNull LicenceTypeDeletedEvent event){
+        name = null;
     }
 }

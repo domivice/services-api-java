@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockJwt;
@@ -17,12 +16,6 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 
 class AddLicenceTypeTests extends AbstractIntegrationTests {
     private final String ENDPOINT = "/services/v1/licence-types";
-    private final String AUDIENCE = "services.api";
-    private final String ADMIN_ROLE = "AppAdmin";
-    private final String TOKEN_TYPE = "at+jwt";
-    private final SecurityMockServerConfigurers.JwtMutator authorizedJwtMutator = mockJwt()
-        .jwt(jwt -> jwt.header("typ", TOKEN_TYPE))
-        .authorities(new SimpleGrantedAuthority("ROLE_" + ADMIN_ROLE), new SimpleGrantedAuthority("SCOPE_" + AUDIENCE));
     @Autowired
     private WebTestClient webClient;
 

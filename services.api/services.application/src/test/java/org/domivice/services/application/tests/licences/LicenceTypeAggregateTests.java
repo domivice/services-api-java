@@ -2,6 +2,7 @@ package org.domivice.services.application.tests.licences;
 
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
+import org.axonframework.test.matchers.Matchers;
 import org.domivice.services.application.licences.LicenceTypeAggregate;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
 import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;
@@ -9,7 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
 import java.util.UUID;
+
+import static org.axonframework.test.matchers.Matchers.*;
 
 class LicenceTypeAggregateTests {
     private static final String LicenceTypeName = "New Licence Type";
@@ -27,14 +31,18 @@ class LicenceTypeAggregateTests {
     void shouldDispatchLicenceTypeCreatedEventWhenCreateLicenceTypeCommand() {
         fixture.givenNoPriorActivity()
             .when(CreateLicenceTypeCommand.builder()
-                .id(id)
+                .aggregateId(id)
                 .name(LicenceTypeName)
                 .build()
             )
-            .expectEvents(LicenceTypeCreatedEvent.builder()
-                .id(id)
-                .name(LicenceTypeName)
-                .build()
+            .expectEventsMatching(
+                payloadsMatching(exactSequenceOf(
+                    matches(event ->
+                        event instanceof LicenceTypeCreatedEvent &&
+                            Objects.equals(id, ((LicenceTypeCreatedEvent) event).getAggregateId()) &&
+                            Objects.equals(LicenceTypeName, ((LicenceTypeCreatedEvent) event).getName())
+                    )
+                ))
             );
     }
 }

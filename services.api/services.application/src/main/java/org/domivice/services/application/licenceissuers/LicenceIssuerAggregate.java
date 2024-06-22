@@ -29,7 +29,7 @@ public class LicenceIssuerAggregate {
         log.debug("Handling command {}", command);
         AggregateLifecycle.apply(LicenceIssuerCreatedEvent
             .builder()
-            .id(command.getId())
+            .aggregateId(command.getAggregateId())
             .issuerName(command.getIssuerName())
             .issuingCountryCode(command.getIssuingCountryCode())
             .issuingStateCode(command.getIssuingStateCode())
@@ -39,7 +39,7 @@ public class LicenceIssuerAggregate {
 
     @EventSourcingHandler
     public void on(@NotNull LicenceIssuerCreatedEvent event) {
-        id = event.getId();
+        id = event.getAggregateId();
         issuerName = event.getIssuerName();
         issuingCountryCode = event.getIssuingCountryCode();
         issuingStateCode = event.getIssuingStateCode();

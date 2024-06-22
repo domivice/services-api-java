@@ -5,6 +5,8 @@ import org.domivice.services.application.licenceissuers.commands.CreateLicenceIs
 import org.domivice.services.application.licenceissuers.services.LicenceIssuerCommandService;
 import org.domivice.services.application.licenceissuers.services.LicenceIssuerQueryService;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
+import org.domivice.services.application.licences.commands.DeleteLicenceTypeCommand;
+import org.domivice.services.application.licences.commands.UpdateLicenceTypeCommand;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
 import org.domivice.services.application.licences.queries.GetLicenceTypesByName;
 import org.domivice.services.application.licences.services.LicenceTypeCommandService;
@@ -52,7 +54,8 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
         return licenceTypeCreate
             .map(l -> CreateLicenceTypeCommand
                 .builder()
-                .id(UUID.randomUUID())
+                .commandId(UUID.randomUUID())
+                .aggregateId(UUID.randomUUID())
                 .name(l.getName())
                 .build())
             .flatMap(licenceTypeCommandService::addLicenceType)
@@ -76,7 +79,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
     public Mono<ResponseEntity<LicenceIssuer>> addLicenceTypeIssuer(Mono<LicenceIssuerCreate> licenceIssuerCreate, ServerWebExchange exchange) {
         return licenceIssuerCreate
             .map(payload -> CreateLicenceIssuerCommand.builder()
-                .id(UUID.randomUUID())
+                .aggregateId(UUID.randomUUID())
                 .issuerName(payload.getIssuerName())
                 .issuingCountryCode(payload.getIssuingCountryCode())
                 .issuingStateCode(payload.getIssuingStateCode())
@@ -116,7 +119,12 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      */
     @Override
     public Mono<ResponseEntity<Void>> deleteLicenceType(UUID licenceTypeId, ServerWebExchange exchange) {
-        return LicencesApiDelegate.super.deleteLicenceType(licenceTypeId, exchange);
+        return Mono.just(DeleteLicenceTypeCommand.builder()
+                .commandId(UUID.randomUUID())
+                .aggregateId(licenceTypeId)
+                .build())
+            .flatMap(licenceTypeCommandService::deleteLicenceType)
+            .then(Mono.just(ResponseEntity.noContent().build()));
     }
 
     /**
@@ -195,29 +203,25 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      */
     @Override
     @PreAuthorize("hasRole('AppAdmin')")
-    public Mono<ResponseEntity<LicenceTypeList>> listLicenceTypes(
-        String search,
-        Integer page,
-        Integer pageSize,
-        String sort,
-        ServerWebExchange exchange) {
+    public Mono<ResponseEntity<LicenceTypeList>> listLicenceTypes(String search, Integer page, Integer pageSize, String sort, ServerWebExchange exchange) {
         int finalPage = page != null ? page : PaginationConstants.DEFAULT_PAGE;
         int finalPageSize = pageSize != null ? pageSize : PaginationConstants.DEFAULT_PAGE_SIZE;
-        return licenceTypeQueryService.getLicenceTypesByName(GetLicenceTypesByName.builder()
+
+        return Mono.just(GetLicenceTypesByName.builder()
                 .name(search)
                 .page(finalPage)
                 .pageSize(finalPageSize)
                 .sort(sort != null ? sort : "name:asc")
-                .build()
-            ).map(entity -> modelMapper.map(entity, LicenceType.class)) // map to LicenceType
-            .collectList() // collect all LicenceType objects into a list
-            .map(licenceTypes -> {
-                LicenceTypeList licenceTypeList = new LicenceTypeList();
-                licenceTypeList.setData(licenceTypes);
-                licenceTypeList.setPageCount(BigDecimal.valueOf(finalPage));
-                licenceTypeList.setTotalItemsCount(BigDecimal.valueOf(licenceTypes.size()));
-                return ResponseEntity.status(HttpStatus.OK).body(licenceTypeList);
-            });
+                .build())
+            .flatMapMany(licenceTypeQueryService::getLicenceTypesByName)
+            .map(entity -> modelMapper.map(entity, LicenceType.class)) // map to LicenceType
+            .collectList()
+            .map(licenceTypes -> ResponseEntity.status(HttpStatus.OK).body(
+                new LicenceTypeList()
+                    .data(licenceTypes)
+                    .pageCount(BigDecimal.valueOf(finalPage))
+                    .totalItemsCount(BigDecimal.valueOf(licenceTypes.size()))
+            ));
     }
 
     /**
@@ -253,6 +257,13 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      */
     @Override
     public Mono<ResponseEntity<LicenceType>> updateLicenceType(UUID licenceTypeId, Mono<LicenceTypePatch> licenceTypePatch, ServerWebExchange exchange) {
-        return LicencesApiDelegate.super.updateLicenceType(licenceTypeId, licenceTypePatch, exchange);
+        return licenceTypePatch.map(payload -> UpdateLicenceTypeCommand.builder()
+                .aggregateId(licenceTypeId)
+                .commandId(UUID.randomUUID())
+                .name(payload.getName())
+                .build()
+            ).flatMap(licenceTypeCommandService::updateLicenceType)
+            .map(entity -> modelMapper.map(entity, LicenceType.class))
+            .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

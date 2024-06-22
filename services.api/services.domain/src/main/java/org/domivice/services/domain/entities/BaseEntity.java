@@ -1,11 +1,11 @@
 package org.domivice.services.domain.entities;
 
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.time.ZonedDateTime;
 
-@Data
+@Getter
 public abstract class BaseEntity<T> {
     protected T id;
     protected ZonedDateTime created;

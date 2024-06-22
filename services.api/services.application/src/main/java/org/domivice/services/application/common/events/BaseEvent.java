@@ -13,6 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BaseEvent {
-    @JsonProperty("id")
-    private UUID id;
+    @JsonProperty("aggregateId")
+    private UUID aggregateId;
 }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
-import org.axonframework.queryhandling.SubscriptionQueryResult;
+import org.domivice.services.application.common.commands.BaseCommand;
 import org.domivice.services.application.licenceissuers.commands.CreateLicenceIssuerCommand;
 import org.domivice.services.application.licenceissuers.queries.GetLicenceIssuerQuery;
 import org.domivice.services.application.licences.LicenceTypeRepository;
@@ -41,17 +41,16 @@ public class LicenceIssuerAxonCommandService implements LicenceIssuerCommandServ
             });
     }
 
-    private Mono<LicenceIssuer> sendCommandAndQueryResult(CreateLicenceIssuerCommand command) {
-        var query = GetLicenceIssuerQuery.builder().id(command.getId()).build();
-        var subscriptionQuery = subscriptionQuery(query);
-        return Mono.fromFuture(commandGateway.send(command))
-            .then(subscriptionQuery.updates().next().doFinally(s -> subscriptionQuery.close()));
-    }
+    private Mono<LicenceIssuer> sendCommandAndQueryResult(BaseCommand command) {
+        var query = GetLicenceIssuerQuery.builder().aggregateId(command.getAggregateId()).build();
 
-    private SubscriptionQueryResult<List<LicenceIssuer>, LicenceIssuer> subscriptionQuery(GetLicenceIssuerQuery query) {
-        return queryGateway.subscriptionQuery(
+        var subscriptionQuery = queryGateway.subscriptionQuery(
             query,
             ResponseTypes.multipleInstancesOf(LicenceIssuer.class),
-            ResponseTypes.instanceOf(LicenceIssuer.class));
+            ResponseTypes.instanceOf(LicenceIssuer.class)
+        );
+
+        return Mono.fromFuture(commandGateway.send(command))
+            .then(subscriptionQuery.updates().next().doFinally(s -> subscriptionQuery.close()));
     }
 }

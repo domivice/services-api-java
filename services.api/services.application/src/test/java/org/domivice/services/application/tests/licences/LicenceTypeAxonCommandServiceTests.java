@@ -6,6 +6,7 @@ import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType;
 import org.axonframework.queryhandling.DefaultSubscriptionQueryResult;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.SubscriptionQueryResult;
+import org.domivice.services.application.licences.LicenceTypeRepository;
 import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
 import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
 import org.domivice.services.application.licences.services.LicenceTypeAxonCommandService;
@@ -38,6 +39,8 @@ class LicenceTypeAxonCommandServiceTests {
     private CommandGateway commandGateway;
     @MockBean
     private QueryGateway queryGateway;
+    @MockBean
+    private LicenceTypeRepository licenceTypeRepository;
     @Autowired
     private LicenceTypeAxonCommandService commandService;
 
@@ -45,10 +48,11 @@ class LicenceTypeAxonCommandServiceTests {
     @DisplayName("Add Licence Type Should Return Added Licence Type")
     void addLicenceTypeShouldReturnAddedLicenceType() {
         var command = CreateLicenceTypeCommand.builder()
-            .id(UUID.randomUUID())
+            .commandId(UUID.randomUUID())
+            .aggregateId(UUID.randomUUID())
             .name("New Licence")
             .build();
-        var licenceType = LicenceType.create(command.getName());
+        var licenceType = LicenceType.create(command.getAggregateId(), command.getName());
         var subscriptionQuery = new DefaultSubscriptionQueryResult<>(
             Mono.just(List.of(licenceType)),
             Flux.just(licenceType),

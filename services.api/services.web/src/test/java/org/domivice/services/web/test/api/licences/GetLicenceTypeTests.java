@@ -10,22 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.test.StepVerifier;
+
+import java.util.UUID;
 
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockJwt;
 
 class GetLicenceTypeTests extends AbstractIntegrationTests {
     private final String ENDPOINT = "/services/v1/licence-types";
-    private final String AUDIENCE = "services.api";
-    private final String ADMIN_ROLE = "AppAdmin";
-    private final String TOKEN_TYPE = "at+jwt";
-    private final SecurityMockServerConfigurers.JwtMutator authorizedJwtMutator = mockJwt().jwt(
-        jwt -> jwt.header("typ", TOKEN_TYPE)).authorities(
-        new SimpleGrantedAuthority("ROLE_" + ADMIN_ROLE),
-        new SimpleGrantedAuthority("SCOPE_" + AUDIENCE)
-    );
+
     @Autowired
     private WebTestClient webClient;
     @Autowired
@@ -34,7 +28,7 @@ class GetLicenceTypeTests extends AbstractIntegrationTests {
     @DisplayName("200Test: Should return a Licence Type")
     @Test
     void shouldReturnALicenceType() {
-        var licenceType = LicenceType.create("Licence Type");
+        var licenceType = LicenceType.create(UUID.randomUUID(), "Licence Type");
 
         // Insert the licence type and verify the insertion
         StepVerifier.create(licenceTypeRepository.insert(licenceType)).expectNextCount(1).verifyComplete();
@@ -54,7 +48,7 @@ class GetLicenceTypeTests extends AbstractIntegrationTests {
     @Test
     void shouldReturnStatusNotFound() {
         webClient.mutateWith(authorizedJwtMutator).get()
-            .uri(ENDPOINT + "/d8ad8b7c-685b-4da1-ad73-de1f42736e85")
+            .uri(ENDPOINT + "/" + UUID.randomUUID())
             .exchange()
             .expectStatus()
             .isNotFound()

@@ -1,32 +1,52 @@
 package org.domivice.services.domain.entities;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@Data
+@Getter
+@EqualsAndHashCode
 public class LicenceIssuer extends BaseEntity<UUID> {
-    private String issuerName;
-    private String issuingCountryCode;
-    private String issuingStateCode;
-    private UUID licenceTypeId;
+    protected String issuerName;
+    protected String issuingCountryCode;
+    protected String issuingStateCode;
+    protected UUID licenceTypeId;
 
-    private LicenceIssuer(String issuerName, String issuingCountryCode, String issuingStateCode, UUID licenceTypeId) {
+    protected LicenceIssuer(){}
+
+    private LicenceIssuer(UUID id, String issuerName, String issuingCountryCode, String issuingStateCode, UUID licenceTypeId) {
         this.issuerName = issuerName;
         this.issuingCountryCode = issuingCountryCode;
         this.issuingStateCode = issuingStateCode;
         this.licenceTypeId = licenceTypeId;
-        this.id = UUID.randomUUID();
+        this.id = id;
         this.created = ZonedDateTime.now(ZoneOffset.UTC);
         this.updated = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
-    protected LicenceIssuer() {
+    private LicenceIssuer(UUID id, String issuerName, String issuingCountryCode, String issuingStateCode, UUID licenceTypeId, ZonedDateTime created, ZonedDateTime updated) {
+        this.issuerName = issuerName;
+        this.issuingCountryCode = issuingCountryCode;
+        this.issuingStateCode = issuingStateCode;
+        this.licenceTypeId = licenceTypeId;
+        this.id = id;
+        this.created = created;
+        this.updated = updated;
     }
 
-    public static LicenceIssuer create(String issuerName, String issuingCountryCode, String issuingStateCode, UUID licenceTypeId) {
-        return new LicenceIssuer(issuerName, issuingCountryCode, issuingStateCode, licenceTypeId);
+    public static LicenceIssuer create(UUID id, String issuerName, String issuingCountryCode, String issuingStateCode, UUID licenceTypeId) {
+        return new LicenceIssuer(id, issuerName, issuingCountryCode, issuingStateCode, licenceTypeId);
+    }
+
+    protected static LicenceIssuer build(UUID id, String issuerName, String issuingCountryCode, String issuingStateCode, UUID licenceTypeId, ZonedDateTime created, ZonedDateTime updated) {
+        return new LicenceIssuer(id, issuerName, issuingCountryCode, issuingStateCode, licenceTypeId, created, updated);
+    }
+
+    public void changeIssuerName(String issuerName){
+        this.issuerName = issuerName;
+        this.updated = ZonedDateTime.now(ZoneOffset.UTC);
     }
 }

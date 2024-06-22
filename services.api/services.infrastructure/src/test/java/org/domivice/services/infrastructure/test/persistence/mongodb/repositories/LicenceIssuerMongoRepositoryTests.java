@@ -29,6 +29,7 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
     void repositoryShouldInsertLicenceTypeSuccess() {
         //Given
         var licenceIssuer = LicenceIssuer.create(
+            UUID.randomUUID(),
             "Société de l'assurance automobile du Québec",
             "CA",
             "QC",
@@ -49,6 +50,7 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
     void repositoryShouldFindOneLicenceIssuerSuccess() {
         // Given
         var licenceIssuer = LicenceIssuer.create(
+            UUID.randomUUID(),
             "Régie du bâtiment du Québec",
             "CA",
             "QC",
@@ -70,9 +72,9 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
     void repositoryShouldSearchByIssuerNameSuccess() {
         // Given
         seedDatabase(
-            LicenceIssuer.create("Régie du bâtiment du Québec", "CA", "QC", UUID.randomUUID()),
-            LicenceIssuer.create("Société de l'assurance automobile du Québec", "CA", "QC", UUID.randomUUID()),
-            LicenceIssuer.create("Collège des médecins du Québec", "CA", "QC", UUID.randomUUID())
+            LicenceIssuer.create(UUID.randomUUID(),"Régie du bâtiment du Québec", "CA", "QC", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"Société de l'assurance automobile du Québec", "CA", "QC", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"Collège des médecins du Québec", "CA", "QC", UUID.randomUUID())
         );
 
         // Act & Assert
@@ -96,13 +98,13 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
         // Given
         seedDatabase(
             // US Licenses
-            LicenceIssuer.create("Driver's License", "US", "CA", UUID.randomUUID()),
-            LicenceIssuer.create("Medical License", "US", "NY", UUID.randomUUID()),
-            LicenceIssuer.create("California Board of Psychology", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"Driver's License", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"Medical License", "US", "NY", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"California Board of Psychology", "US", "CA", UUID.randomUUID()),
             // Canada Licenses
-            LicenceIssuer.create("Driver's Licence", "CA", "ON", UUID.randomUUID()),
-            LicenceIssuer.create("Medical Licence", "CA", "QC", UUID.randomUUID()),
-            LicenceIssuer.create("College of Psychologists of Ontario", "CA", "ON", UUID.randomUUID())
+            LicenceIssuer.create(UUID.randomUUID(),"Driver's Licence", "CA", "ON", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"Medical Licence", "CA", "QC", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"College of Psychologists of Ontario", "CA", "ON", UUID.randomUUID())
         );
 
         // Act
@@ -125,13 +127,13 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
         // Given
         seedDatabase(
             // Licenses from California (CA)
-            LicenceIssuer.create("Driver's License", "US", "CA", UUID.randomUUID()),
-            LicenceIssuer.create("Medical License", "US", "CA", UUID.randomUUID()),
-            LicenceIssuer.create("California Board of Psychology", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"Driver's License", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"Medical License", "US", "CA", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"California Board of Psychology", "US", "CA", UUID.randomUUID()),
             // Licenses from New York (NY)
-            LicenceIssuer.create("Driver's License", "US", "NY", UUID.randomUUID()),
-            LicenceIssuer.create("Medical License", "US", "NY", UUID.randomUUID()),
-            LicenceIssuer.create("New York State Board for Psychology", "US", "NY", UUID.randomUUID())
+            LicenceIssuer.create(UUID.randomUUID(),"Driver's License", "US", "NY", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"Medical License", "US", "NY", UUID.randomUUID()),
+            LicenceIssuer.create(UUID.randomUUID(),"New York State Board for Psychology", "US", "NY", UUID.randomUUID())
         );
 
         //Act
@@ -144,6 +146,59 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
                 return licenceIssuerList.stream().allMatch(
                     licenceIssuer -> "NY".equals(licenceIssuer.getIssuingStateCode())
                 );
+            }).verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Repository should delete licence issuer by ID")
+    void repositoryShouldDeleteLicenceIssuerById() {
+        // Given
+        var licenceIssuer = LicenceIssuer.create(
+            UUID.randomUUID(),
+            "Test Licence Issuer",
+            "US",
+            "CA",
+            UUID.randomUUID()
+        );
+        seedDatabase(licenceIssuer);
+
+        // Act & Assert
+        StepVerifier.create(repository.delete(licenceIssuer.getId()))
+            .verifyComplete();
+
+        StepVerifier.create(repository.findOneById(licenceIssuer.getId()))
+            .expectNextCount(0)
+            .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Repository should update licence issuer")
+    void repositoryShouldUpdateLicenceIssuer() {
+        // Given
+        var licenceIssuer = LicenceIssuer.create(
+            UUID.randomUUID(),
+            "Original Licence Issuer",
+            "US",
+            "CA",
+            UUID.randomUUID()
+        );
+        seedDatabase(licenceIssuer);
+
+        // Modify the licence issuer
+        var updatedName = "Updated Licence Issuer";
+        licenceIssuer.changeIssuerName(updatedName);
+
+        // Act & Assert
+        StepVerifier.create(repository.update(licenceIssuer))
+            .expectNextMatches(savedLicenceIssuer -> {
+                Assertions.assertNotNull(savedLicenceIssuer);
+                return savedLicenceIssuer.getIssuerName().equals(updatedName);
+            }).verifyComplete();
+
+        StepVerifier.create(repository.findOneById(licenceIssuer.getId()))
+            .expectNextMatches(retrievedLicenceIssuer -> {
+                Assertions.assertNotNull(retrievedLicenceIssuer);
+                return retrievedLicenceIssuer.getIssuerName().equals(updatedName);
             }).verifyComplete();
     }
 

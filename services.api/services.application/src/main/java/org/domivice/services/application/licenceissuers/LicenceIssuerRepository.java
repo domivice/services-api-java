@@ -11,9 +11,7 @@ public interface LicenceIssuerRepository {
     Mono<LicenceIssuer> insert(LicenceIssuer licenceIssuer);
 
     Mono<LicenceIssuer> findOneById(UUID id);
-
-    Flux<LicenceIssuer> findBy(Pageable pageable);
-
+    
     Flux<LicenceIssuer> findByIssuingCountryCode(String issuingCountryCode, Pageable pageable);
 
     Flux<LicenceIssuer> findByIssuingStateCode(String issuingStateCode, Pageable pageable);
@@ -23,4 +21,8 @@ public interface LicenceIssuerRepository {
     Mono<Boolean> existsById(UUID id);
 
     Mono<Void> deleteAll();
+
+    Mono<Void> delete(UUID id);
+
+    Mono<LicenceIssuer> update(LicenceIssuer licenceIssuer);
 }

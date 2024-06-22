@@ -20,4 +20,8 @@ public interface LicenceTypeRepository {
     Mono<Boolean> existsById(UUID id);
 
     Mono<Void> deleteAll();
+
+    Mono<Void> delete(UUID id);
+
+    Mono<LicenceType> update(LicenceType licenceType);
 }

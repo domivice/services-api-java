@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @SpringBootTest(classes = LicenceTypeMongoRepository.class)
@@ -27,7 +28,7 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
     @DisplayName("Repository Should Insert Licence Type Success")
     void repositoryShouldInsertLicenceTypeSuccess() {
         //Given
-        var licenceType = LicenceType.create("Licence Type");
+        var licenceType = LicenceType.create(UUID.randomUUID(),"Licence Type");
 
         // Act & Assert
         StepVerifier.create(repository.insert(licenceType))
@@ -42,7 +43,7 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
     @DisplayName("Repository Should Find One Licence Type Success")
     void repositoryShouldFindOneLicenceTypeSuccess() {
         // Given
-        var licenceType = LicenceType.create("Licence Type");
+        var licenceType = LicenceType.create(UUID.randomUUID(),"Licence Type");
         seedDatabase(licenceType);
 
         // Act & Assert
@@ -59,11 +60,11 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
     void repositoryShouldSearchByLicenceTypeNameSuccess() {
         // Given
         seedDatabase(
-            LicenceType.create("Business License"),
-            LicenceType.create("Driver's License"),
-            LicenceType.create("Professional License"),
-            LicenceType.create("Marriage License"),
-            LicenceType.create("Fishing License")
+            LicenceType.create(UUID.randomUUID(),"Business License"),
+            LicenceType.create(UUID.randomUUID(),"Driver's License"),
+            LicenceType.create(UUID.randomUUID(),"Professional License"),
+            LicenceType.create(UUID.randomUUID(),"Marriage License"),
+            LicenceType.create(UUID.randomUUID(),"Fishing License")
         );
 
         // Act
@@ -86,11 +87,11 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
     void repositoryShouldReturnAllLicenceTypes() {
         // Given
         seedDatabase(
-            LicenceType.create("Business License"),
-            LicenceType.create("Driver's License"),
-            LicenceType.create("Professional License"),
-            LicenceType.create("Marriage License"),
-            LicenceType.create("Fishing License")
+            LicenceType.create(UUID.randomUUID(),"Business License"),
+            LicenceType.create(UUID.randomUUID(),"Driver's License"),
+            LicenceType.create(UUID.randomUUID(),"Professional License"),
+            LicenceType.create(UUID.randomUUID(),"Marriage License"),
+            LicenceType.create(UUID.randomUUID(),"Fishing License")
         );
 
         // Act
@@ -110,7 +111,7 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
     void repositoryShouldReturnEmptyList() {
         //Given
         seedDatabase(
-            LicenceType.create("Business License")
+            LicenceType.create(UUID.randomUUID(),"Business License")
         );
 
         // Act
@@ -124,6 +125,37 @@ class LicenceTypeMongoRepositoryTests extends MongoInfra {
                 return licenseTypeList.isEmpty();
             })
             .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Repository should update licence type")
+    void repositoryShouldUpdateLicenceType(){
+        // Given
+        var licenceType = LicenceType.create(UUID.randomUUID(),"Licence Type");
+        seedDatabase(licenceType);
+
+        var updatedName = "Updated Licence Type";
+        licenceType.changeName(updatedName);
+
+        StepVerifier.create(repository.update(licenceType)).expectNextMatches(updatedLicenceType -> {
+            Assertions.assertNotNull(updatedLicenceType);
+            return updatedLicenceType.getName().equals(updatedName);
+        }).verifyComplete();
+
+        StepVerifier.create(repository.findOneById(licenceType.getId())).expectNextMatches(retrievedLicenceType -> {
+            Assertions.assertNotNull(retrievedLicenceType);
+            return retrievedLicenceType.getName().equals(updatedName);
+        }).verifyComplete();
+    }
+    @DisplayName("Repository should delete licence type")
+    @Test
+    void repositoryShouldDeleteLicenceType(){
+        // Given
+        var licenceType = LicenceType.create(UUID.randomUUID(),"Licence Type");
+        seedDatabase(licenceType);
+
+        StepVerifier.create(repository.delete(licenceType.getId())).verifyComplete();
+        StepVerifier.create(repository.findOneById(licenceType.getId())).expectNextCount(0).verifyComplete();
     }
 
     private void seedDatabase(LicenceType... licenceTypes) {

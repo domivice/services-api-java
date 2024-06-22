@@ -1,5 +1,6 @@
 package org.domivice.services.web.exceptions;
 
+import org.domivice.services.domain.exceptions.NotFoundException;
 import org.domivice.services.domain.exceptions.ValidationException;
 import org.domivice.services.openapi.models.ProblemDetail;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,15 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    public static final String VALIDATION_ERROR_PROBLEM_TYPE = "https://domivice.com/services/probs/validation-error";
+    public static final String REQUEST_FORMAT_PROBLEM_TYPE = "https://domivice.com/services/probs/request-format";
+    public static final String NOT_FOUND_PROBLEM_TYPE = "https://domivice.com/services/probs/not-found";
     @ExceptionHandler(value = WebExchangeBindException.class)
     public Mono<ResponseEntity<ProblemDetail>> exception(WebExchangeBindException exception, ServerWebExchange exchange) {
         ProblemDetail problemDetail = new ProblemDetail()
             .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
             .instance(exchange.getRequest().getPath().toString())
-            .type("https://domivice.com/services/probs/validation-error")
+            .type(VALIDATION_ERROR_PROBLEM_TYPE)
             .title("A validation error occurred")
             .detail("One or more fields are invalid");
         Map<String, List<String>> errors = exception.getBindingResult()
@@ -42,7 +46,7 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = new ProblemDetail()
             .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
             .instance(exchange.getRequest().getPath().toString())
-            .type("https://domivice.com/services/probs/request-format")
+            .type(REQUEST_FORMAT_PROBLEM_TYPE)
             .title("Request formatting problem")
             .detail("The request body is malformed");
         return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
@@ -53,11 +57,21 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = new ProblemDetail()
             .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
             .instance(exchange.getRequest().getPath().toString())
-            .type("https://domivice.com/services/probs/validation-error")
+            .type(VALIDATION_ERROR_PROBLEM_TYPE)
             .title("A validation error occurred")
             .detail("One or more fields are invalid")
             .errors(exception.getErrors());
         return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
+    }
+    @ExceptionHandler(value = NotFoundException.class)
+    public Mono<ResponseEntity<ProblemDetail>> exception(NotFoundException exception, ServerWebExchange exchange) {
+        ProblemDetail problemDetail = new ProblemDetail()
+            .status(String.valueOf(HttpStatus.NOT_FOUND.value()))
+            .instance(exchange.getRequest().getPath().toString())
+            .type(NOT_FOUND_PROBLEM_TYPE)
+            .title(exception.getMessage())
+            .detail("Verify the identifier and try again");
+        return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.NOT_FOUND));
     }
 
     @ExceptionHandler(ResponseStatusException.class)
@@ -65,7 +79,7 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = new ProblemDetail()
             .status(String.valueOf(ex.getStatusCode().value()))
             .instance(exchange.getRequest().getPath().toString())
-            .type("https://domivice.com/services/probs/not-found")
+            .type(NOT_FOUND_PROBLEM_TYPE)
             .title(ex.getReason())
             .detail(ex.getBody().getDetail());
         return Mono.just(new ResponseEntity<>(problemDetail, ex.getStatusCode()));

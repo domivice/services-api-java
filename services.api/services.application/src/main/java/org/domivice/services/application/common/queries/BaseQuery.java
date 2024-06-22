@@ -12,5 +12,5 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BaseQuery {
-    private UUID id;
+    private UUID aggregateId;
 }

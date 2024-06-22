@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @SuperBuilder
-public class CreateLicenceTypeCommand extends BaseCommand {
+public class UpdateLicenceTypeCommand extends BaseCommand {
     private UUID commandId;
     @NotBlank
     private String name;

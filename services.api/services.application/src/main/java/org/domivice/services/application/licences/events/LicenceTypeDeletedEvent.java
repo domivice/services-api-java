@@ -1,6 +1,5 @@
 package org.domivice.services.application.licences.events;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +12,6 @@ import java.util.UUID;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LicenceTypeCreatedEvent extends BaseEvent {
+public class LicenceTypeDeletedEvent extends BaseEvent {
     private UUID eventId;
-    @JsonProperty("name")
-    private String name;
 }
