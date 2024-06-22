@@ -1,10 +1,10 @@
-package org.domivice.services.application.licences.services;
+package org.domivice.services.application.licencetypes.services;
 
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
-import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
-import org.domivice.services.application.licences.queries.GetLicenceTypesByName;
+import org.domivice.services.application.licencetypes.queries.GetLicenceTypeQuery;
+import org.domivice.services.application.licencetypes.queries.GetLicenceTypesByName;
 import org.domivice.services.domain.entities.LicenceType;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

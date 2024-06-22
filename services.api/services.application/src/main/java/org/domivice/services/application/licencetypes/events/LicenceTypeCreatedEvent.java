@@ -1,4 +1,4 @@
-package org.domivice.services.application.licences.events;
+package org.domivice.services.application.licencetypes.events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

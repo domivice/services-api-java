@@ -1,4 +1,4 @@
-package org.domivice.services.application.licences.queries;
+package org.domivice.services.application.licencetypes.queries;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,9 +2,9 @@ package org.domivice.services.application.tests.licences;
 
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
-import org.domivice.services.application.licences.LicenceTypeAggregate;
-import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
-import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;
+import org.domivice.services.application.licencetypes.LicenceTypeAggregate;
+import org.domivice.services.application.licencetypes.commands.CreateLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.events.LicenceTypeCreatedEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

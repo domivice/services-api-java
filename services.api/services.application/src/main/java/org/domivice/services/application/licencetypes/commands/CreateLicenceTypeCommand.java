@@ -1,4 +1,4 @@
-package org.domivice.services.application.licences.commands;
+package org.domivice.services.application.licencetypes.commands;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

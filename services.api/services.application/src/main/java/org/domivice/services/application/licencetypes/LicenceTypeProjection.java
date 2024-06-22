@@ -1,4 +1,4 @@
-package org.domivice.services.application.licences;
+package org.domivice.services.application.licencetypes;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -6,11 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
-import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;
-import org.domivice.services.application.licences.events.LicenceTypeDeletedEvent;
-import org.domivice.services.application.licences.events.LicenceTypeUpdatedEvent;
-import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
-import org.domivice.services.application.licences.queries.GetLicenceTypesByName;
+import org.domivice.services.application.licencetypes.events.LicenceTypeCreatedEvent;
+import org.domivice.services.application.licencetypes.events.LicenceTypeDeletedEvent;
+import org.domivice.services.application.licencetypes.events.LicenceTypeUpdatedEvent;
+import org.domivice.services.application.licencetypes.queries.GetLicenceTypeQuery;
+import org.domivice.services.application.licencetypes.queries.GetLicenceTypesByName;
 import org.domivice.services.domain.entities.LicenceType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;

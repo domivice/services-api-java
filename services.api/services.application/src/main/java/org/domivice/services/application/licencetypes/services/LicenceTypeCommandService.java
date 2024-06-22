@@ -1,8 +1,8 @@
-package org.domivice.services.application.licences.services;
+package org.domivice.services.application.licencetypes.services;
 
-import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
-import org.domivice.services.application.licences.commands.DeleteLicenceTypeCommand;
-import org.domivice.services.application.licences.commands.UpdateLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.commands.CreateLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.commands.DeleteLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.commands.UpdateLicenceTypeCommand;
 import org.domivice.services.domain.entities.LicenceType;
 import reactor.core.publisher.Mono;
 

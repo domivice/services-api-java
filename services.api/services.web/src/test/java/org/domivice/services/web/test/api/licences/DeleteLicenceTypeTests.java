@@ -1,8 +1,8 @@
 package org.domivice.services.web.test.api.licences;
 
-import org.domivice.services.application.licences.LicenceTypeRepository;
-import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
-import org.domivice.services.application.licences.services.LicenceTypeCommandService;
+import org.domivice.services.application.licencetypes.LicenceTypeRepository;
+import org.domivice.services.application.licencetypes.commands.CreateLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.services.LicenceTypeCommandService;
 import org.domivice.services.domain.entities.LicenceType;
 import org.domivice.services.openapi.models.ProblemDetail;
 import org.domivice.services.web.AbstractIntegrationTests;

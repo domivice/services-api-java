@@ -1,6 +1,6 @@
 package org.domivice.services.infrastructure.persistence.mongodb.repositories;
 
-import org.domivice.services.application.licences.LicenceTypeRepository;
+import org.domivice.services.application.licencetypes.LicenceTypeRepository;
 import org.domivice.services.domain.entities.LicenceType;
 import org.domivice.services.infrastructure.persistence.mongodb.documents.LicenceTypeDocument;
 import org.springframework.data.domain.Pageable;

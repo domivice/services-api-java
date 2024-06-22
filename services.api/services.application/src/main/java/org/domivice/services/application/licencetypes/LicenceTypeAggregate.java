@@ -1,4 +1,4 @@
-package org.domivice.services.application.licences;
+package org.domivice.services.application.licencetypes;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
@@ -8,12 +8,12 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
-import org.domivice.services.application.licences.commands.DeleteLicenceTypeCommand;
-import org.domivice.services.application.licences.commands.UpdateLicenceTypeCommand;
-import org.domivice.services.application.licences.events.LicenceTypeCreatedEvent;
-import org.domivice.services.application.licences.events.LicenceTypeDeletedEvent;
-import org.domivice.services.application.licences.events.LicenceTypeUpdatedEvent;
+import org.domivice.services.application.licencetypes.commands.CreateLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.commands.DeleteLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.commands.UpdateLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.events.LicenceTypeCreatedEvent;
+import org.domivice.services.application.licencetypes.events.LicenceTypeDeletedEvent;
+import org.domivice.services.application.licencetypes.events.LicenceTypeUpdatedEvent;
 
 import java.util.UUID;
 

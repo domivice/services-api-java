@@ -1,15 +1,15 @@
-package org.domivice.services.application.licences.services;
+package org.domivice.services.application.licencetypes.services;
 
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.domivice.services.application.common.commands.BaseCommand;
-import org.domivice.services.application.licences.LicenceTypeRepository;
-import org.domivice.services.application.licences.commands.CreateLicenceTypeCommand;
-import org.domivice.services.application.licences.commands.DeleteLicenceTypeCommand;
-import org.domivice.services.application.licences.commands.UpdateLicenceTypeCommand;
-import org.domivice.services.application.licences.queries.GetLicenceTypeQuery;
+import org.domivice.services.application.licencetypes.LicenceTypeRepository;
+import org.domivice.services.application.licencetypes.commands.CreateLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.commands.DeleteLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.commands.UpdateLicenceTypeCommand;
+import org.domivice.services.application.licencetypes.queries.GetLicenceTypeQuery;
 import org.domivice.services.domain.entities.LicenceType;
 import org.domivice.services.domain.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;

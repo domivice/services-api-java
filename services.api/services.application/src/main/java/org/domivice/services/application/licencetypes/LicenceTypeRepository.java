@@ -1,4 +1,4 @@
-package org.domivice.services.application.licences;
+package org.domivice.services.application.licencetypes;
 
 import org.domivice.services.domain.entities.LicenceType;
 import org.springframework.data.domain.Pageable;

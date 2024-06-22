@@ -7,7 +7,7 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.domivice.services.application.common.commands.BaseCommand;
 import org.domivice.services.application.licenceissuers.commands.CreateLicenceIssuerCommand;
 import org.domivice.services.application.licenceissuers.queries.GetLicenceIssuerQuery;
-import org.domivice.services.application.licences.LicenceTypeRepository;
+import org.domivice.services.application.licencetypes.LicenceTypeRepository;
 import org.domivice.services.domain.entities.LicenceIssuer;
 import org.domivice.services.domain.exceptions.ValidationException;
 import org.springframework.stereotype.Service;
