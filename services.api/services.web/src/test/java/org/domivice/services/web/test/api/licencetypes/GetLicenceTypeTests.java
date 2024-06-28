@@ -65,7 +65,7 @@ class GetLicenceTypeTests extends AbstractIntegrationTests {
     @DisplayName("401Test: Should return status unauthorized for non authenticated users")
     void shouldReturnStatusUnAuthorizedForNonAuthenticatedUsers() {
         webClient.get()
-            .uri(ENDPOINT + "/d8ad8b7c-685b-4da1-ad73-de1f42736e85")
+            .uri(ENDPOINT + "/" + UUID.randomUUID())
             .exchange()
             .expectStatus()
             .isUnauthorized();
@@ -78,7 +78,7 @@ class GetLicenceTypeTests extends AbstractIntegrationTests {
                 .jwt(jwt -> jwt.header("typ", TOKEN_TYPE))
                 .authorities(new SimpleGrantedAuthority("SCOPE_" + AUDIENCE)))
             .get()
-            .uri(ENDPOINT + "/d8ad8b7c-685b-4da1-ad73-de1f42736e85")
+            .uri(ENDPOINT + "/" + UUID.randomUUID())
             .exchange()
             .expectStatus()
             .isForbidden();

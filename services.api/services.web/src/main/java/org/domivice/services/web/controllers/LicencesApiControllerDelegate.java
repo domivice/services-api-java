@@ -104,8 +104,10 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#deleteLicenceIssuer
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<Void>> deleteLicenceIssuer(UUID licenceIssuerId, ServerWebExchange exchange) {
         return Mono.just(DeleteLicenceIssuerCommand.builder()
+                .commandId(UUID.randomUUID())
                 .aggregateId(licenceIssuerId)
                 .build()).flatMap(licenceIssuerCommandService::deleteLicenceIssuer)
             .then(Mono.just(ResponseEntity.noContent().build()));
@@ -123,6 +125,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#deleteLicenceType
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<Void>> deleteLicenceType(UUID licenceTypeId, ServerWebExchange exchange) {
         return Mono.just(DeleteLicenceTypeCommand.builder()
                 .commandId(UUID.randomUUID())
@@ -144,6 +147,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#getLicenceIssuer
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceIssuer>> getLicenceIssuer(UUID licenceIssuerId, ServerWebExchange exchange) {
         return LicencesApiDelegate.super.getLicenceIssuer(licenceIssuerId, exchange);
     }
@@ -189,6 +193,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#listLicenceIssuers
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceIssuerList>> listLicenceIssuers(String search, String countryCode, String stateCode, String licenceTypeId, Integer page, Integer pageSize, String sort, ServerWebExchange exchange) {
         return LicencesApiDelegate.super.listLicenceIssuers(search, countryCode, stateCode, licenceTypeId, page, pageSize, sort, exchange);
     }

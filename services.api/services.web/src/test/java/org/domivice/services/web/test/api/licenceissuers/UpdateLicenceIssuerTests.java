@@ -33,11 +33,7 @@ class UpdateLicenceIssuerTests extends AbstractIntegrationTests {
     @Autowired
     private WebTestClient webClient;
     @Autowired
-    private LicenceTypeRepository licenceTypeRepository;
-    @Autowired
     private LicenceIssuerRepository licenceIssuerRepository;
-    @Autowired
-    private LicenceIssuerCommandService licenceIssuerCommandService;
 
     @BeforeAll
     static void setUp(@Autowired LicenceTypeRepository licenceTypeRepository,
