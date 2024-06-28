@@ -15,4 +15,5 @@ import java.util.UUID;
 public class BaseEvent {
     @JsonProperty("aggregateId")
     private UUID aggregateId;
+    private UUID eventId;
 }

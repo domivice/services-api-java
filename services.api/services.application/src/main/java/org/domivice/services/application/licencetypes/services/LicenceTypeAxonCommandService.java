@@ -31,21 +31,21 @@ public class LicenceTypeAxonCommandService implements LicenceTypeCommandService 
 
     public Mono<LicenceType> updateLicenceType(UpdateLicenceTypeCommand command) {
         return checkIfLicenceTypeExists(command.getAggregateId())
-            .flatMap(exists -> sendCommandAndQueryResult(command));
+            .then(sendCommandAndQueryResult(command));
     }
 
     public Mono<Void> deleteLicenceType(DeleteLicenceTypeCommand command) {
         return checkIfLicenceTypeExists(command.getAggregateId())
-            .flatMap(exits -> Mono.fromFuture(commandGateway.send(command)));
+            .then(Mono.fromFuture(commandGateway.send(command)));
     }
 
-    private Mono<Boolean> checkIfLicenceTypeExists(UUID licenceTypeId) {
+    private Mono<Void> checkIfLicenceTypeExists(UUID licenceTypeId) {
         return licenceTypeRepository.existsById(licenceTypeId)
             .flatMap(exists -> {
                 if (exists.equals(Boolean.FALSE)) {
                     return Mono.error(new NotFoundException("Licence type with id " + licenceTypeId + " not found"));
                 }
-                return Mono.just(exists);
+                return Mono.empty();
             });
     }
 

@@ -1,4 +1,4 @@
-package org.domivice.services.application.licencetypes.events;
+package org.domivice.services.application.licenceissuers.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,11 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.domivice.services.application.common.events.BaseEvent;
 
-import java.util.UUID;
-
 @Data
 @SuperBuilder
 //@AllArgsConstructor
 @NoArgsConstructor
-public class LicenceTypeDeletedEvent extends BaseEvent {
+public class LicenceIssuerDeletedEvent extends BaseEvent {
 }

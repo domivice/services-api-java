@@ -21,3 +21,6 @@ axon:
       enabled: false
     event-store:
       enabled: false
+logging:
+  level:
+    org.springframework.validation: DEBUG

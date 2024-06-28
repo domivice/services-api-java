@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.domivice.services.application.licencetypes.queries.GetLicenceTypeQuery;
-import org.domivice.services.application.licencetypes.queries.GetLicenceTypesByName;
+import org.domivice.services.application.licencetypes.queries.GetLicenceTypesByNameQuery;
 import org.domivice.services.domain.entities.LicenceType;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -31,7 +31,7 @@ public class LicenceTypeAxonQueryService implements LicenceTypeQueryService {
      * @return
      */
     @Override
-    public Flux<LicenceType> getLicenceTypesByName(GetLicenceTypesByName query) {
+    public Flux<LicenceType> getLicenceTypesByName(GetLicenceTypesByNameQuery query) {
         return Mono.fromFuture(() -> queryGateway.query(query, ResponseTypes.multipleInstancesOf(LicenceType.class)))
             .flatMapMany(Flux::fromIterable);
     }

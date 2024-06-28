@@ -1,5 +1,6 @@
 package org.domivice.services.web.exceptions;
 
+import jakarta.validation.ConstraintViolationException;
 import org.domivice.services.domain.exceptions.NotFoundException;
 import org.domivice.services.domain.exceptions.ValidationException;
 import org.domivice.services.openapi.models.ProblemDetail;
@@ -85,5 +86,23 @@ public class GlobalExceptionHandler {
             .title(ex.getReason())
             .detail(ex.getBody().getDetail());
         return Mono.just(new ResponseEntity<>(problemDetail, ex.getStatusCode()));
+    }
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public Mono<ResponseEntity<ProblemDetail>> handleConstraintViolationException(ConstraintViolationException exception, ServerWebExchange exchange) {
+        ProblemDetail problemDetail = new ProblemDetail()
+            .status(String.valueOf(HttpStatus.BAD_REQUEST.value()))
+            .instance(exchange.getRequest().getPath().toString())
+            .type(VALIDATION_ERROR_PROBLEM_TYPE)
+            .title("A validation error occurred")
+            .detail("One or more fields are invalid");
+        Map<String, List<String>> errors = exception.getConstraintViolations()
+            .stream()
+            .collect(Collectors.toMap(
+                violation -> violation.getPropertyPath().toString().substring(violation.getPropertyPath().toString().lastIndexOf('.') + 1),
+                violation -> List.of(violation.getMessage())
+            ));
+        problemDetail.setErrors(errors);
+
+        return Mono.just(new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST));
     }
 }

@@ -14,7 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LicenceTypeUpdatedEvent extends BaseEvent {
-    private UUID eventId;
     @JsonProperty("name")
     private String name;
 }

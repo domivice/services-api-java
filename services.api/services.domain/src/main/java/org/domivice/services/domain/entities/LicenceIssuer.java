@@ -46,8 +46,20 @@ public class LicenceIssuer extends BaseEntity<UUID> {
         return new LicenceIssuer(id, issuerName, issuingCountryCode, issuingStateCode, licenceTypeId, created, updated);
     }
 
-    public void changeIssuerName(String issuerName) {
+    public void changeName(String issuerName) {
         this.issuerName = issuerName;
+        this.updated = ZonedDateTime.now(ZoneOffset.UTC);
+    }
+    public void changeCountryCode(String countryCode){
+        this.issuingCountryCode = countryCode;
+        this.updated = ZonedDateTime.now(ZoneOffset.UTC);
+    }
+    public void changeStateCode(String stateCode){
+        this.issuingStateCode = stateCode;
+        this.updated = ZonedDateTime.now(ZoneOffset.UTC);
+    }
+    public void changeLicenceTypeId(UUID licenceTypeId){
+        this.licenceTypeId = licenceTypeId;
         this.updated = ZonedDateTime.now(ZoneOffset.UTC);
     }
 }

@@ -2,13 +2,15 @@ package org.domivice.services.web.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.domivice.services.application.licenceissuers.commands.CreateLicenceIssuerCommand;
+import org.domivice.services.application.licenceissuers.commands.DeleteLicenceIssuerCommand;
+import org.domivice.services.application.licenceissuers.commands.UpdateLicenceIssuerCommand;
 import org.domivice.services.application.licenceissuers.services.LicenceIssuerCommandService;
 import org.domivice.services.application.licenceissuers.services.LicenceIssuerQueryService;
 import org.domivice.services.application.licencetypes.commands.CreateLicenceTypeCommand;
 import org.domivice.services.application.licencetypes.commands.DeleteLicenceTypeCommand;
 import org.domivice.services.application.licencetypes.commands.UpdateLicenceTypeCommand;
 import org.domivice.services.application.licencetypes.queries.GetLicenceTypeQuery;
-import org.domivice.services.application.licencetypes.queries.GetLicenceTypesByName;
+import org.domivice.services.application.licencetypes.queries.GetLicenceTypesByNameQuery;
 import org.domivice.services.application.licencetypes.services.LicenceTypeCommandService;
 import org.domivice.services.application.licencetypes.services.LicenceTypeQueryService;
 import org.domivice.services.openapi.controllers.LicencesApi;
@@ -103,7 +105,10 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      */
     @Override
     public Mono<ResponseEntity<Void>> deleteLicenceIssuer(UUID licenceIssuerId, ServerWebExchange exchange) {
-        return LicencesApiDelegate.super.deleteLicenceIssuer(licenceIssuerId, exchange);
+        return Mono.just(DeleteLicenceIssuerCommand.builder()
+                .aggregateId(licenceIssuerId)
+                .build()).flatMap(licenceIssuerCommandService::deleteLicenceIssuer)
+            .then(Mono.just(ResponseEntity.noContent().build()));
     }
 
     /**
@@ -207,7 +212,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
         int finalPage = page != null ? page : PaginationConstants.DEFAULT_PAGE;
         int finalPageSize = pageSize != null ? pageSize : PaginationConstants.DEFAULT_PAGE_SIZE;
 
-        return Mono.just(GetLicenceTypesByName.builder()
+        return Mono.just(GetLicenceTypesByNameQuery.builder()
                 .name(search)
                 .page(finalPage)
                 .pageSize(finalPageSize)
@@ -238,8 +243,18 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#updateLicenceIssuer
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceIssuer>> updateLicenceIssuer(UUID licenceIssuerId, Mono<LicenceIssuerPatch> licenceIssuerPatch, ServerWebExchange exchange) {
-        return LicencesApiDelegate.super.updateLicenceIssuer(licenceIssuerId, licenceIssuerPatch, exchange);
+        return licenceIssuerPatch.map(payload -> UpdateLicenceIssuerCommand.builder()
+                .aggregateId(licenceIssuerId)
+                .licenceTypeId(payload.getLicenceTypeId())
+                .issuingCountryCode(payload.getIssuingCountryCode())
+                .issuingStateCode(payload.getIssuingStateCode())
+                .issuerName(payload.getIssuerName())
+                .build()
+            ).flatMap(licenceIssuerCommandService::updateLicenceIssuer)
+            .map(entity -> modelMapper.map(entity, LicenceIssuer.class))
+            .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
     /**
@@ -256,6 +271,7 @@ public class LicencesApiControllerDelegate implements LicencesApiDelegate {
      * @see LicencesApi#updateLicenceType
      */
     @Override
+    @PreAuthorize("hasRole('AppAdmin')")
     public Mono<ResponseEntity<LicenceType>> updateLicenceType(UUID licenceTypeId, Mono<LicenceTypePatch> licenceTypePatch, ServerWebExchange exchange) {
         return licenceTypePatch.map(payload -> UpdateLicenceTypeCommand.builder()
                 .aggregateId(licenceTypeId)

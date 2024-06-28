@@ -1,4 +1,4 @@
-package org.domivice.services.web.test.api.licences;
+package org.domivice.services.web.test.api.licencetypes;
 
 import org.domivice.services.openapi.models.LicenceTypeCreate;
 import org.domivice.services.openapi.models.ProblemDetail;

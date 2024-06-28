@@ -1,4 +1,4 @@
-package org.domivice.services.application.licencetypes.commands;
+package org.domivice.services.application.licenceissuers.commands;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -10,8 +10,10 @@ import java.util.UUID;
 
 @Data
 @SuperBuilder
-public class CreateLicenceTypeCommand extends BaseCommand {
-    @NotBlank
+public class UpdateLicenceIssuerCommand extends BaseCommand {
     @ValidDisplayName
-    private String name;
+    private String issuerName;
+    private String issuingCountryCode;
+    private String issuingStateCode;
+    private UUID licenceTypeId;
 }

@@ -10,7 +10,7 @@ import org.domivice.services.application.licencetypes.events.LicenceTypeCreatedE
 import org.domivice.services.application.licencetypes.events.LicenceTypeDeletedEvent;
 import org.domivice.services.application.licencetypes.events.LicenceTypeUpdatedEvent;
 import org.domivice.services.application.licencetypes.queries.GetLicenceTypeQuery;
-import org.domivice.services.application.licencetypes.queries.GetLicenceTypesByName;
+import org.domivice.services.application.licencetypes.queries.GetLicenceTypesByNameQuery;
 import org.domivice.services.domain.entities.LicenceType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class LicenceTypeProjection {
 
     @EventHandler
     public void on(@NotNull LicenceTypeCreatedEvent event) {
-        log.debug("Handling created event {}", event);
+        log.debug("Handling LicenceTypeCreatedEvent {}", event);
         repository.existsById(event.getAggregateId())
             .flatMap(exists -> {
                 if (exists.equals(Boolean.TRUE)) {
@@ -49,7 +49,7 @@ public class LicenceTypeProjection {
 
     @EventHandler
     public void on(@NotNull LicenceTypeUpdatedEvent event) {
-        log.debug("Handling updated event {}", event);
+        log.debug("Handling LicenceTypeUpdatedEvent {}", event);
 
         // Update the licence type in the repository
         repository.findOneById(event.getAggregateId()).flatMap(existingLicenceType -> {
@@ -65,7 +65,7 @@ public class LicenceTypeProjection {
 
     @EventHandler
     public void on(@NotNull LicenceTypeDeletedEvent event) {
-        log.debug("Handling deleted event {}", event);
+        log.debug("Handling LicenceTypeDeletedEvent {}", event);
         repository.findOneById(event.getAggregateId())
             .flatMap(licenceType -> repository.delete(licenceType.getId()))
             .subscribe();
@@ -73,13 +73,13 @@ public class LicenceTypeProjection {
 
     @QueryHandler
     public Mono<LicenceType> handle(GetLicenceTypeQuery query) {
-        log.debug("Handling query {}", query);
+        log.debug("Handling GetLicenceTypeQuery {}", query);
         return repository.findOneById(query.getLicenceTypeId());
     }
 
     @QueryHandler
-    public Flux<LicenceType> handle(GetLicenceTypesByName query) {
-        log.debug("Handling query {}", query);
+    public Flux<LicenceType> handle(GetLicenceTypesByNameQuery query) {
+        log.debug("Handling GetLicenceTypesByName {}", query);
 
         if (query.getName() == null || query.getName().isEmpty()) {
             return repository.findBy(PageRequest.of(

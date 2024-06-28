@@ -186,7 +186,7 @@ class LicenceIssuerMongoRepositoryTests extends MongoInfra {
 
         // Modify the licence issuer
         var updatedName = "Updated Licence Issuer";
-        licenceIssuer.changeIssuerName(updatedName);
+        licenceIssuer.changeName(updatedName);
 
         // Act & Assert
         StepVerifier.create(repository.update(licenceIssuer))

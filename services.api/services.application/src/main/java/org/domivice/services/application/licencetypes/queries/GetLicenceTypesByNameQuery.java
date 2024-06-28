@@ -13,6 +13,6 @@ import org.domivice.services.application.common.queries.PageableQuery;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetLicenceTypesByName extends PageableQuery {
+public class GetLicenceTypesByNameQuery extends PageableQuery {
     private String name;
 }
